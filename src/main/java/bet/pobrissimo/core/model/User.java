@@ -1,5 +1,6 @@
 package bet.pobrissimo.core.model;
 
+import bet.pobrissimo.core.dto.user.UserCreateDto;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -26,6 +27,12 @@ public class User {
     }
 
     public User() {
+    }
+
+    public User(UserCreateDto dto, String encode) {
+        this.name = dto.name();
+        this.email = dto.email();
+        this.password = encode;
     }
 
     public Long getId() {

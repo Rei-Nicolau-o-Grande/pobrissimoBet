@@ -1,14 +1,16 @@
 package bet.pobrissimo.core.controller.v1;
 
-import bet.pobrissimo.core.controller.BaseController;
+import bet.pobrissimo.core.dto.user.UserCreateDto;
+import bet.pobrissimo.core.dto.user.UserResponseDto;
 import bet.pobrissimo.core.service.UserService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/v1/users")
-public class UserController implements BaseController {
+@RequestMapping("/api/v1/users")
+public class UserController {
 
     private UserService userService;
 
@@ -16,22 +18,23 @@ public class UserController implements BaseController {
         this.userService = userService;
     }
 
-    @Override
-    public ResponseEntity<?> create(Object entity) throws RuntimeException {
-        throw new UnsupportedOperationException("Unimplemented method 'create'");
+    @PostMapping
+    public ResponseEntity<UserResponseDto> create(@RequestBody @Valid UserCreateDto dto) throws RuntimeException {
+        this.userService.create(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @Override
+    @PutMapping()
     public ResponseEntity<?> update(Object entity) throws RuntimeException {
         throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
 
-    @Override
+    @GetMapping
     public ResponseEntity<?> findById(Long id) throws RuntimeException {
         throw new UnsupportedOperationException("Unimplemented method 'findById'");
     }
 
-    @Override
+    @DeleteMapping
     public ResponseEntity<?> delete(Object entity) throws RuntimeException {
         throw new UnsupportedOperationException("Unimplemented method 'delete'");
     }
