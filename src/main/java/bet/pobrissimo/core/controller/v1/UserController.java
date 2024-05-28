@@ -17,27 +17,22 @@ public class UserController implements BaseController {
     }
 
     @Override
-    public ResponseEntity<?> create(Object entity) {
-        return null;
+    public ResponseEntity<?> create(Object entity) throws RuntimeException {
+        throw new UnsupportedOperationException("Unimplemented method 'create'");
     }
 
     @Override
-    public ResponseEntity<?> update(Object entity) {
-        return null;
+    public ResponseEntity<?> update(Object entity) throws RuntimeException {
+        throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
 
     @Override
-    public ResponseEntity<?> findById(Long id) {
-        return null;
+    public ResponseEntity<?> findById(Long id) throws RuntimeException {
+        throw new UnsupportedOperationException("Unimplemented method 'findById'");
     }
 
     @Override
-    public ResponseEntity<?> findAllPageable() {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<?> delete(Object entity) {
-        return null;
+    public ResponseEntity<?> delete(Object entity) throws RuntimeException {
+        throw new UnsupportedOperationException("Unimplemented method 'delete'");
     }
 }

@@ -15,9 +15,6 @@ public interface BaseController<T> {
     @GetMapping
     ResponseEntity<?> findById(Long id);
 
-    @GetMapping
-    ResponseEntity<?> findAllPageable();
-
     @DeleteMapping
     ResponseEntity<?> delete(@RequestBody @Valid T entity);
 
