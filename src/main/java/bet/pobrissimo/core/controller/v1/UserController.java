@@ -18,8 +18,8 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public ResponseEntity<UserResponseDto> create(@RequestBody @Valid UserCreateDto dto) throws RuntimeException {
+    @PostMapping()
+    public ResponseEntity<UserResponseDto> create(@RequestBody @Valid UserCreateDto dto) {
         this.userService.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

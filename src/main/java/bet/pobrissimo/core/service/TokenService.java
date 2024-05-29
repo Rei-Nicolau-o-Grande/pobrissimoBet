@@ -1,5 +1,6 @@
 package bet.pobrissimo.core.service;
 
+import bet.pobrissimo.core.model.Role;
 import bet.pobrissimo.core.model.User;
 import bet.pobrissimo.core.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,17 +10,18 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
+import java.util.stream.Collectors;
 
 @Service
-public class AuthService {
+public class TokenService {
 
     private final JwtEncoder jwtEncoder;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthService(JwtEncoder jwtEncoder,
-                       UserRepository userRepository,
-                       PasswordEncoder passwordEncoder) {
+    public TokenService(JwtEncoder jwtEncoder,
+                        UserRepository userRepository,
+                        PasswordEncoder passwordEncoder) {
         this.jwtEncoder = jwtEncoder;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -27,12 +29,17 @@ public class AuthService {
 
     public JwtClaimsSet createJwtClaimsSet(User user) {
 
+        String roleNames = user.getRoles().stream()
+                .map(Role::getName)
+                .collect(Collectors.joining(" "));
+
         return JwtClaimsSet.builder()
-                .issuer("pobrissimo-bet")
+                .issuer("pobrissimo.bet")
                 .subject(user.getId().toString())
                 .claims(claims -> {
-                    claims.put("name", user.getName());
+                    claims.put("username", user.getUsername());
                     claims.put("email", user.getEmail());
+                    claims.put("scope", roleNames);
                 })
                 .issuedAt(Instant.now())
                 .expiresAt(Instant.now().plusSeconds(expirationTimeDay()))
@@ -49,7 +56,6 @@ public class AuthService {
         LocalDate today = LocalDate.now(zoneId);
         ZonedDateTime endOfDay = today.atTime(23, 59, 59).atZone(zoneId);
 
-        // Calcular a diferença em segundos entre agora e o final do dia
         long expirationSeconds = Duration.between(now, endOfDay.toInstant()).getSeconds();
 
         return expirationSeconds;

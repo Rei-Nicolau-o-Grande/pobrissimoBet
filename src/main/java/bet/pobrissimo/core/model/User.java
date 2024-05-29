@@ -1,9 +1,12 @@
 package bet.pobrissimo.core.model;
 
 import bet.pobrissimo.core.dto.user.UserCreateDto;
+import bet.pobrissimo.core.enums.RoleEnum;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -14,26 +17,43 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private String name;
+    @Column(unique = true)
+    private String username;
 
     private String email;
 
     private String password;
 
-    public User(UUID id, String name, String email, String password) {
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"),
+            schema = "public"
+    )
+    private Set<Role> roles;
+
+    public User(UUID id, String username, String email, String password, Set<Role> roles) {
         this.id = id;
-        this.name = name;
+        this.username = username;
         this.email = email;
         this.password = password;
+        this.roles = roles;
     }
 
     public User() {
     }
 
-    public User(UserCreateDto dto, String encode) {
-        this.name = dto.name();
+    public User(UserCreateDto dto, String encode, Role defaultRole) {
+        this.username = dto.username();
         this.email = dto.email();
         this.password = encode;
+        this.roles = new HashSet<>();
+        this.addRole(defaultRole);
+    }
+
+    public void addRole(Role role) {
+        this.roles.add(role);
     }
 
     public UUID getId() {
@@ -44,12 +64,12 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -68,26 +88,34 @@ public class User {
         this.password = password;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(password, user.password);
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, password);
+        return Objects.hash(id, username, email, password);
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+                "password='" + password + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
+                ", username='" + username + '\'' +
+                ", id=" + id +
                 '}';
     }
 }
