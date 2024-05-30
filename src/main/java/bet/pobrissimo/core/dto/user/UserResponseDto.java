@@ -1,4 +1,7 @@
 package bet.pobrissimo.core.dto.user;
 
-public record UserResponseDto(Long id, String username, String email) {
+import java.util.Set;
+import java.util.UUID;
+
+public record UserResponseDto(UUID id, String username, String email, Set<String> roles) {
 }

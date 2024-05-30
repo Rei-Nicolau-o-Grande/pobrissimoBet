@@ -1,7 +1,6 @@
 package bet.pobrissimo.core.enums;
 
 import bet.pobrissimo.core.model.Role;
-import bet.pobrissimo.core.model.User;
 
 public enum RoleEnum {
     ADMIN(1L, "Admin"),
