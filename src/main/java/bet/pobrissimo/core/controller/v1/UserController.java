@@ -42,7 +42,7 @@ public class UserController {
         throw new UnsupportedOperationException("Unimplemented method 'delete'");
     }
 
-    @GetMapping
+    @GetMapping("/search")
     @PreAuthorize("hasRole('ROLE_Admin')")
     public ResponseEntity<PageableDto> findAllPageable(
             @RequestParam(value = "username", required = false) String username,
@@ -56,6 +56,11 @@ public class UserController {
         );
     }
 
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('ROLE_Player') or hasRole('ROLE_Admin')")
+    public ResponseEntity<UserResponseDto> me() {
+        return ResponseEntity.status(HttpStatus.OK).body(this.userService.me());
+    }
 
 
 }

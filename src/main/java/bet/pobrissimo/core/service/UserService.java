@@ -7,6 +7,7 @@ import bet.pobrissimo.core.model.Role;
 import bet.pobrissimo.core.model.User;
 import bet.pobrissimo.core.repository.RoleRepository;
 import bet.pobrissimo.core.repository.UserRepository;
+import bet.pobrissimo.infra.config.CurrentUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,4 +76,12 @@ public class UserService {
         return new PageImpl<>(userDtos, pageable, users.getTotalElements());
     }
 
+    public UserResponseDto me() {
+        UUID userId = CurrentUser.getUserId();
+        String userName = CurrentUser.getUserName();
+        String email = CurrentUser.getUserEmail();
+        Set<String> roles = CurrentUser.getUserRoles();
+
+        return new UserResponseDto(userId, userName, email, roles);
+    }
 }
