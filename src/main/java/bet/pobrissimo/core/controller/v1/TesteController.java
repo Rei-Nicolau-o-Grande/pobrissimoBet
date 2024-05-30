@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TesteController {
 
     @GetMapping()
-    @PreAuthorize("hasAuthority('SCOPE_Admin')")
+    @PreAuthorize("hasRole('ROLE_Admin') or hasRole('ROLE_Player')")
     public String teste() {
         return "Teste";
     }

@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('SCOPE_Admin')")
+    @PreAuthorize("hasRole('ROLE_Admin')")
     public ResponseEntity<PageableDto> findAllPageable(
             @RequestParam(value = "username", required = false) String username,
             @RequestParam(value = "email", required = false) String email,

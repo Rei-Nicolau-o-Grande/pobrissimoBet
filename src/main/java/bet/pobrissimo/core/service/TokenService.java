@@ -2,7 +2,6 @@ package bet.pobrissimo.core.service;
 
 import bet.pobrissimo.core.model.Role;
 import bet.pobrissimo.core.model.User;
-import bet.pobrissimo.core.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -10,28 +9,26 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class TokenService {
 
     private final JwtEncoder jwtEncoder;
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     public TokenService(JwtEncoder jwtEncoder,
-                        UserRepository userRepository,
                         PasswordEncoder passwordEncoder) {
         this.jwtEncoder = jwtEncoder;
-        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     public JwtClaimsSet createJwtClaimsSet(User user) {
 
-        String roleNames = user.getRoles().stream()
+        List<String> roleNames = user.getRoles().stream()
                 .map(Role::getName)
-                .collect(Collectors.joining(" "));
+                .collect(Collectors.toList());
 
         return JwtClaimsSet.builder()
                 .issuer("pobrissimo.bet")
@@ -39,7 +36,7 @@ public class TokenService {
                 .claims(claims -> {
                     claims.put("username", user.getUsername());
                     claims.put("email", user.getEmail());
-                    claims.put("scope", roleNames);
+                    claims.put("roles", roleNames);
                 })
                 .issuedAt(Instant.now())
                 .expiresAt(Instant.now().plusSeconds(expirationTimeDay()))
@@ -55,10 +52,7 @@ public class TokenService {
         ZoneId zoneId = ZoneId.systemDefault();
         LocalDate today = LocalDate.now(zoneId);
         ZonedDateTime endOfDay = today.atTime(23, 59, 59, 500000000).atZone(zoneId);
-
-        long expirationSeconds = Duration.between(now, endOfDay.toInstant()).getSeconds();
-
-        return expirationSeconds;
+        return Duration.between(now, endOfDay.toInstant()).getSeconds();
     }
 
     public boolean validatePassword(String rawPassword, String encodedPassword) {
