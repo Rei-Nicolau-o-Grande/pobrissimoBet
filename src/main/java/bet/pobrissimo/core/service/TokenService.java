@@ -54,7 +54,7 @@ public class TokenService {
         Instant now = Instant.now();
         ZoneId zoneId = ZoneId.systemDefault();
         LocalDate today = LocalDate.now(zoneId);
-        ZonedDateTime endOfDay = today.atTime(23, 59, 59).atZone(zoneId);
+        ZonedDateTime endOfDay = today.atTime(23, 59, 59, 500000000).atZone(zoneId);
 
         long expirationSeconds = Duration.between(now, endOfDay.toInstant()).getSeconds();
 
