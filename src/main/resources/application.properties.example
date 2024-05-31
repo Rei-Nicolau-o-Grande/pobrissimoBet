@@ -35,3 +35,8 @@ server.port=${PORT}
 springdoc.swagger-ui.protocol=${SWAGGER_PROTOCOL}
 spring.mvc.static-path-pattern=${SWAGGER_PATH_PATTERN}
 springdoc.swagger-ui.path=${SWAGGER_UI_PATH}
+
+# Create Admin User
+admin.email=${ADMIN_EMAIL}
+admin.username=${ADMIN_USERNAME}
+admin.password=${ADMIN_PASSWORD}
