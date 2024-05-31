@@ -35,6 +35,7 @@ build/
 
 ### env ###
 .env
+probissimo-bet
 
 src/main/resources/app.key
 src/main/resources/app.pub

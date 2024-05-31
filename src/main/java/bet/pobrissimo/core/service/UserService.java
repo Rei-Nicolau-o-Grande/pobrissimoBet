@@ -1,6 +1,6 @@
 package bet.pobrissimo.core.service;
 
-import bet.pobrissimo.core.dto.user.UserCreateDto;
+import bet.pobrissimo.core.dto.user.UserRequestDto;
 import bet.pobrissimo.core.dto.user.UserResponseDto;
 import bet.pobrissimo.core.enums.RoleEnum;
 import bet.pobrissimo.core.model.Role;
@@ -8,6 +8,9 @@ import bet.pobrissimo.core.model.User;
 import bet.pobrissimo.core.repository.RoleRepository;
 import bet.pobrissimo.core.repository.UserRepository;
 import bet.pobrissimo.infra.config.CurrentUser;
+import bet.pobrissimo.infra.exception.AccessDeniedException;
+import bet.pobrissimo.infra.exception.EntityNotFoundException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -36,16 +39,46 @@ public class UserService {
     }
 
     @Transactional
-    public void create(UserCreateDto dto) {
-        Role defaultRole = roleRepository.findById(RoleEnum.PLAYER.getId())
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+    public void create(UserRequestDto dto) {
+        Role defaultRole = this.roleRepository.findById(RoleEnum.PLAYER.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Role não encontrada."));
 
         User user = new User(dto, passwordEncoder.encode(dto.password()), defaultRole);
         userRepository.save(user);
     }
 
+    @Transactional
+    public void update(UUID userId, UserRequestDto dto) {
+
+        UUID authenticatedUserId = CurrentUser.getUserId();
+
+        if (!authenticatedUserId.equals(userId)) {
+            throw new AccessDeniedException("Você não tem permissão para atualizar este usuário.");
+        }
+
+        User user = this.userRepository.getReferenceById(userId);
+
+        if (user == null) {
+            throw new EntityNotFoundException("Usuário não encontrado.");
+        }
+
+        BeanUtils.copyProperties(dto, user, "password");
+
+        if (dto.password() != null && !dto.password().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(dto.password()));
+        }
+
+        this.userRepository.save(user);
+    }
+
     @Transactional(readOnly = true)
-    public Page<UserResponseDto> shearch(String username, String email, String role, Pageable pageable) {
+    public User findById(UUID userId) {
+        return this.userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<UserResponseDto> search(String username, String email, String role, Pageable pageable) {
 
         if (username == null && email == null && role == null) {
             return this.findAllPageable(pageable);

@@ -1,6 +1,6 @@
 package bet.pobrissimo.core.model;
 
-import bet.pobrissimo.core.dto.user.UserCreateDto;
+import bet.pobrissimo.core.dto.user.UserRequestDto;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -43,7 +43,7 @@ public class User {
     public User() {
     }
 
-    public User(UserCreateDto dto, String encode, Role defaultRole) {
+    public User(UserRequestDto dto, String encode, Role defaultRole) {
         this.username = dto.username();
         this.email = dto.email();
         this.password = encode;
