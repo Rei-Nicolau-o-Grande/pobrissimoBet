@@ -9,7 +9,6 @@ import bet.pobrissimo.core.repository.RoleRepository;
 import bet.pobrissimo.core.repository.UserRepository;
 import bet.pobrissimo.infra.config.AccessControlService;
 import bet.pobrissimo.infra.config.AuthenticatedCurrentUser;
-import bet.pobrissimo.infra.exception.AccessDeniedException;
 import bet.pobrissimo.infra.exception.EntityNotFoundException;
 import bet.pobrissimo.infra.util.ValidateConvertStringToUUID;
 import org.springframework.beans.BeanUtils;
