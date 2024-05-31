@@ -10,6 +10,7 @@ import bet.pobrissimo.core.repository.UserRepository;
 import bet.pobrissimo.infra.config.CurrentUser;
 import bet.pobrissimo.infra.exception.AccessDeniedException;
 import bet.pobrissimo.infra.exception.EntityNotFoundException;
+import bet.pobrissimo.infra.util.ValidateConvertStringToUUID;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -48,19 +49,16 @@ public class UserService {
     }
 
     @Transactional
-    public void update(UUID userId, UserRequestDto dto) {
+    public void update(String userId, UserRequestDto dto) {
 
-        UUID authenticatedUserId = CurrentUser.getUserId();
+        this.findById(userId);
 
-        if (!authenticatedUserId.equals(userId)) {
+        if (!CurrentUser.getUserId().equals(UUID.fromString(userId)) &&
+                !CurrentUser.getUserRoles().contains(RoleEnum.ADMIN.getName())) {
             throw new AccessDeniedException("Você não tem permissão para atualizar este usuário.");
         }
 
-        User user = this.userRepository.getReferenceById(userId);
-
-        if (user == null) {
-            throw new EntityNotFoundException("Usuário não encontrado.");
-        }
+        User user = this.userRepository.getReferenceById(UUID.fromString(userId));
 
         BeanUtils.copyProperties(dto, user, "password");
 
@@ -72,8 +70,10 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User findById(UUID userId) {
-        return this.userRepository.findById(userId)
+    public User findById(String userId) {
+        var userIdUUID = ValidateConvertStringToUUID.validate(userId, "Usuário não encontrado.");
+
+        return this.userRepository.findById(userIdUUID)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
     }
 

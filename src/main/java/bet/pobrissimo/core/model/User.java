@@ -2,7 +2,10 @@ package bet.pobrissimo.core.model;
 
 import bet.pobrissimo.core.dto.user.UserRequestDto;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -23,6 +26,16 @@ public class User {
 
     private String password;
 
+    @CreationTimestamp
+    private Instant createdAt;
+
+    @UpdateTimestamp
+    private Instant updatedAt;
+
+    private Instant deactivatedAt;
+
+    private Boolean isActive;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_roles",
@@ -32,11 +45,15 @@ public class User {
     )
     private Set<Role> roles;
 
-    public User(UUID id, String username, String email, String password, Set<Role> roles) {
+    public User(UUID id, String username, String email, String password, Instant createdAt, Instant updatedAt, Instant deactivatedAt, boolean isActive, Set<Role> roles) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.deactivatedAt = deactivatedAt;
+        this.isActive = isActive;
         this.roles = roles;
     }
 
@@ -53,6 +70,10 @@ public class User {
 
     public void addRole(Role role) {
         this.roles.add(role);
+    }
+
+    public void removeRole(Role role) {
+        this.roles.remove(role);
     }
 
     public UUID getId() {
@@ -87,6 +108,38 @@ public class User {
         this.password = password;
     }
 
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Instant getDeactivatedAt() {
+        return deactivatedAt;
+    }
+
+    public void setDeactivatedAt(Instant deactivatedAt) {
+        this.deactivatedAt = deactivatedAt;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
     public Set<Role> getRoles() {
         return roles;
     }
@@ -100,21 +153,26 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(roles, user.roles);
+        return isActive == user.isActive && Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt) && Objects.equals(deactivatedAt, user.deactivatedAt) && Objects.equals(roles, user.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, email, password, roles);
+        return Objects.hash(id, username, email, password, createdAt, updatedAt, deactivatedAt, isActive, roles);
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "password='" + password + '\'' +
-                ", email='" + email + '\'' +
+                "id=" + id +
                 ", username='" + username + '\'' +
-                ", id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", deactivatedAt=" + deactivatedAt +
+                ", isActive=" + isActive +
+                ", roles=" + roles +
                 '}';
     }
 }

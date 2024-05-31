@@ -33,14 +33,14 @@ public class UserController {
 
     @PutMapping("/{userId}")
     @PreAuthorize("hasRole('ROLE_Admin') or hasRole('ROLE_Player')")
-    public ResponseEntity<?> update(@PathVariable("userId") UUID userId, @RequestBody @Valid UserRequestDto dto) {
+    public ResponseEntity<?> update(@PathVariable("userId") String userId, @RequestBody @Valid UserRequestDto dto) {
         this.userService.update(userId, dto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
     @GetMapping("/{userId}")
     @PreAuthorize("hasRole('ROLE_Admin')")
-    public ResponseEntity<UserResponseDto> findById(@PathVariable("userId") UUID userId) {
+    public ResponseEntity<UserResponseDto> findById(@PathVariable("userId") String userId) {
         var user = this.userService.findById(userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(new UserResponseDto(
