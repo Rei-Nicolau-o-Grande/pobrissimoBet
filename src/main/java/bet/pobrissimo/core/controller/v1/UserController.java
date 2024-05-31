@@ -51,9 +51,11 @@ public class UserController {
         ));
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> delete(Object entity) throws RuntimeException {
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+    @DeleteMapping("/{userId}")
+    @PreAuthorize("hasRole('ROLE_Admin') or hasRole('ROLE_Player')")
+    public ResponseEntity<?> delete(@PathVariable("userId") String userId) {
+        this.userService.delete(userId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping("/search")

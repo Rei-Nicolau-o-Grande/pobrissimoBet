@@ -7,7 +7,8 @@ import bet.pobrissimo.core.model.Role;
 import bet.pobrissimo.core.model.User;
 import bet.pobrissimo.core.repository.RoleRepository;
 import bet.pobrissimo.core.repository.UserRepository;
-import bet.pobrissimo.infra.config.CurrentUser;
+import bet.pobrissimo.infra.config.AccessControlService;
+import bet.pobrissimo.infra.config.AuthenticatedCurrentUser;
 import bet.pobrissimo.infra.exception.AccessDeniedException;
 import bet.pobrissimo.infra.exception.EntityNotFoundException;
 import bet.pobrissimo.infra.util.ValidateConvertStringToUUID;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -43,23 +45,15 @@ public class UserService {
     public void create(UserRequestDto dto) {
         Role defaultRole = this.roleRepository.findById(RoleEnum.PLAYER.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Role não encontrada."));
-
         User user = new User(dto, passwordEncoder.encode(dto.password()), defaultRole);
         userRepository.save(user);
     }
 
     @Transactional
     public void update(String userId, UserRequestDto dto) {
-
         this.findById(userId);
-
-        if (!CurrentUser.getUserId().equals(UUID.fromString(userId)) &&
-                !CurrentUser.getUserRoles().contains(RoleEnum.ADMIN.getName())) {
-            throw new AccessDeniedException("Você não tem permissão para atualizar este usuário.");
-        }
-
+        AccessControlService.checkPermission(userId);
         User user = this.userRepository.getReferenceById(UUID.fromString(userId));
-
         BeanUtils.copyProperties(dto, user, "password");
 
         if (dto.password() != null && !dto.password().isEmpty()) {
@@ -67,6 +61,14 @@ public class UserService {
         }
 
         this.userRepository.save(user);
+    }
+
+    @Transactional
+    public void delete(String userId) {
+        var user = this.findById(userId);
+        AccessControlService.checkPermission(userId);
+        user.setDeactivatedAt(Instant.now());
+        user.setActive(false);
     }
 
     @Transactional(readOnly = true)
@@ -110,10 +112,10 @@ public class UserService {
     }
 
     public UserResponseDto me() {
-        UUID userId = CurrentUser.getUserId();
-        String userName = CurrentUser.getUserName();
-        String email = CurrentUser.getUserEmail();
-        Set<String> roles = CurrentUser.getUserRoles();
+        UUID userId = AuthenticatedCurrentUser.getUserId();
+        String userName = AuthenticatedCurrentUser.getUserName();
+        String email = AuthenticatedCurrentUser.getUserEmail();
+        Set<String> roles = AuthenticatedCurrentUser.getUserRoles();
 
         return new UserResponseDto(userId, userName, email, roles);
     }

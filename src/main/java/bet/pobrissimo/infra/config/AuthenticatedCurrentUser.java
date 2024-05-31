@@ -6,7 +6,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.util.*;
 
-public class CurrentUser {
+public class AuthenticatedCurrentUser {
 
     private static Map<String, Object> extractClaim() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
