@@ -7,6 +7,7 @@ import bet.pobrissimo.core.dto.user.UserResponseDto;
 import bet.pobrissimo.core.model.Role;
 import bet.pobrissimo.core.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,7 +69,8 @@ public class UserController {
             @RequestParam(value = "isActive", required = false) Boolean isActive,
             @RequestParam(value = "role", required = false) String role,
             Pageable pageable) {
-        var users = this.userService.search(username, email, isActive, role, pageable);
+
+        Page<UserResponseDto> users = this.userService.search(username, email, isActive, role, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new PageableDto(users.getContent(), users.getNumber(), users.getSize(), users.getNumberOfElements(),
                         users.getTotalPages(), users.getTotalElements(), users.getSort().toString())

@@ -1,5 +1,6 @@
 package bet.pobrissimo.core.service;
 
+import bet.pobrissimo.core.Specifications.UserSpecifications;
 import bet.pobrissimo.core.dto.user.MeResponseDto;
 import bet.pobrissimo.core.dto.user.UserRequestDto;
 import bet.pobrissimo.core.dto.user.UserResponseDto;
@@ -16,6 +17,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -81,25 +83,14 @@ public class UserService {
     @Transactional(readOnly = true)
     public Page<UserResponseDto> search(String username, String email, Boolean isActive, String role, Pageable pageable) {
 
-        if (username == null && email == null && isActive == null && role == null) {
-            return this.findAllPageable(pageable);
-        }
+        // Log dos parâmetros recebidos no serviço
+        System.out.println("Service - Username: " + username + ", Email: " + email +
+                ", isActive: " + isActive + ", Role: " + role);
 
-        Page<User> users = userRepository
-                .findByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrIsActiveOrRolesName(
-                        username, email, isActive, role, pageable
-                );
+        Specification<User> specification = UserSpecifications.searchByCriteria(username, email, isActive, role);
 
-        if (users.isEmpty()) {
-            this.findAllPageable(pageable);
-        }
+        Page<User> users = this.userRepository.findAll(specification, pageable);
 
-        return getUserResponseDtos(pageable, users);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<UserResponseDto> findAllPageable(Pageable pageable) {
-        Page<User> users = userRepository.findAll(pageable);
         return getUserResponseDtos(pageable, users);
     }
 
