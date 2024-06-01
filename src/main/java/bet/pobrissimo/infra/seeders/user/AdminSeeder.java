@@ -4,6 +4,7 @@ import bet.pobrissimo.core.enums.RoleEnum;
 import bet.pobrissimo.core.model.User;
 import bet.pobrissimo.core.repository.RoleRepository;
 import bet.pobrissimo.core.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,9 +16,14 @@ import java.util.Set;
 @Configuration
 public class AdminSeeder implements CommandLineRunner {
 
-    private static final String ADMIN_EMAIL = "admin@admin.com";
-    private static final String ADMIN_USERNAME = "admin";
-    private static final String ADMIN_PASSWORD = "123456";
+    @Value("${app.admin.email}")
+    private String ADMIN_EMAIL;
+
+    @Value("${app.admin.username}")
+    private String ADMIN_USERNAME;
+
+    @Value("${app.admin.password}")
+    private String ADMIN_PASSWORD;
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
