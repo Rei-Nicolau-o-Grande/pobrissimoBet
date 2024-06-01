@@ -1,6 +1,6 @@
 package bet.pobrissimo.core.service;
 
-import bet.pobrissimo.core.Specifications.UserSpecifications;
+import bet.pobrissimo.core.specifications.UserSpecifications;
 import bet.pobrissimo.core.dto.user.MeResponseDto;
 import bet.pobrissimo.core.dto.user.UserRequestDto;
 import bet.pobrissimo.core.dto.user.UserResponseDto;

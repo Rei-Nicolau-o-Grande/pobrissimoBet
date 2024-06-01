@@ -1,4 +1,4 @@
-package bet.pobrissimo.core.Specifications;
+package bet.pobrissimo.core.specifications;
 
 import bet.pobrissimo.core.model.User;
 import jakarta.persistence.criteria.Join;
