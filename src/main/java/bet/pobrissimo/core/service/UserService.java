@@ -1,5 +1,6 @@
 package bet.pobrissimo.core.service;
 
+import bet.pobrissimo.core.dto.user.MeResponseDto;
 import bet.pobrissimo.core.dto.user.UserRequestDto;
 import bet.pobrissimo.core.dto.user.UserResponseDto;
 import bet.pobrissimo.core.enums.RoleEnum;
@@ -21,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -42,9 +42,9 @@ public class UserService {
 
     @Transactional
     public void create(UserRequestDto dto) {
-        Role defaultRole = this.roleRepository.findById(RoleEnum.PLAYER.getId())
+        Role rolePlayer = this.roleRepository.findById(RoleEnum.PLAYER.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Role não encontrada."));
-        User user = new User(dto, passwordEncoder.encode(dto.password()), defaultRole);
+        User user = new User(dto, passwordEncoder.encode(dto.password()), rolePlayer);
         userRepository.save(user);
     }
 
@@ -79,14 +79,16 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<UserResponseDto> search(String username, String email, String role, Pageable pageable) {
+    public Page<UserResponseDto> search(String username, String email, Boolean isActive, String role, Pageable pageable) {
 
-        if (username == null && email == null && role == null) {
+        if (username == null && email == null && isActive == null && role == null) {
             return this.findAllPageable(pageable);
         }
 
-        Page<User> users = userRepository.findByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrRolesName
-                (username, email, role, pageable);
+        Page<User> users = userRepository
+                .findByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrIsActiveOrRolesName(
+                        username, email, isActive, role, pageable
+                );
 
         if (users.isEmpty()) {
             this.findAllPageable(pageable);
@@ -103,19 +105,20 @@ public class UserService {
 
     private Page<UserResponseDto> getUserResponseDtos(Pageable pageable, Page<User> users) {
         List<UserResponseDto> userDtos = users.stream()
-                .map(user -> new UserResponseDto(user.getId(), user.getUsername(), user.getEmail(), user.getRoles().stream()
+                .map(user -> new UserResponseDto(
+                        user.getId(), user.getUsername(), user.getEmail(), user.getCreatedAt(), user.isActive(),
+                        user.getRoles().stream()
                         .map(Role::getName)
                         .collect(Collectors.toSet())))
                 .collect(Collectors.toList());
         return new PageImpl<>(userDtos, pageable, users.getTotalElements());
     }
 
-    public UserResponseDto me() {
+    public MeResponseDto me() {
         UUID userId = AuthenticatedCurrentUser.getUserId();
         String userName = AuthenticatedCurrentUser.getUserName();
         String email = AuthenticatedCurrentUser.getUserEmail();
-        Set<String> roles = AuthenticatedCurrentUser.getUserRoles();
 
-        return new UserResponseDto(userId, userName, email, roles);
+        return new MeResponseDto(userId, userName, email);
     }
 }

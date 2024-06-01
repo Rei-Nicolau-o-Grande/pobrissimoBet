@@ -1,6 +1,7 @@
 package bet.pobrissimo.core.controller.v1;
 
 import bet.pobrissimo.core.dto.PageableDto;
+import bet.pobrissimo.core.dto.user.MeResponseDto;
 import bet.pobrissimo.core.dto.user.UserRequestDto;
 import bet.pobrissimo.core.dto.user.UserResponseDto;
 import bet.pobrissimo.core.model.Role;
@@ -46,6 +47,8 @@ public class UserController {
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
+                user.getCreatedAt(),
+                user.isActive(),
                 user.getRoles().stream().map(Role::getName).collect(Collectors.toSet())
         ));
     }
@@ -62,9 +65,10 @@ public class UserController {
     public ResponseEntity<PageableDto> findAllPageable(
             @RequestParam(value = "username", required = false) String username,
             @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "isActive", required = false) Boolean isActive,
             @RequestParam(value = "role", required = false) String role,
             Pageable pageable) {
-        var users = this.userService.search(username, email, role, pageable);
+        var users = this.userService.search(username, email, isActive, role, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new PageableDto(users.getContent(), users.getNumber(), users.getSize(), users.getNumberOfElements(),
                         users.getTotalPages(), users.getTotalElements(), users.getSort().toString())
@@ -73,7 +77,7 @@ public class UserController {
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('ROLE_Player') or hasRole('ROLE_Admin')")
-    public ResponseEntity<UserResponseDto> me() {
+    public ResponseEntity<MeResponseDto> me() {
         return ResponseEntity.status(HttpStatus.OK).body(this.userService.me());
     }
 

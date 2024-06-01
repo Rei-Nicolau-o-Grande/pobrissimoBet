@@ -18,8 +18,8 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     Optional<User> findByUsername(String username);
 
-    Page<User> findByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrRolesName
-            (String username, String email , String role, Pageable pageable);
+    Page<User> findByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrIsActiveOrRolesName
+            (String username, String email , Boolean isActive, String role, Pageable pageable);
 
     Page<User> findAll(Pageable pageable);
 }

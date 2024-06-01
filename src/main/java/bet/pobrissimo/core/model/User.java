@@ -60,12 +60,13 @@ public class User {
     public User() {
     }
 
-    public User(UserRequestDto dto, String encode, Role defaultRole) {
+    public User(UserRequestDto dto, String encode, Role rolePlayer) {
         this.username = dto.username();
         this.email = dto.email();
         this.password = encode;
+        this.isActive = true;
         this.roles = new HashSet<>();
-        this.addRole(defaultRole);
+        this.addRole(rolePlayer);
     }
 
     public void addRole(Role role) {
