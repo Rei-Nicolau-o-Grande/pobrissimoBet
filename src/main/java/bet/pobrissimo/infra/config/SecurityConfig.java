@@ -1,5 +1,6 @@
 package bet.pobrissimo.infra.config;
 
+import bet.pobrissimo.infra.exception.CustomAccessDeniedHandler;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -44,8 +45,16 @@ public class SecurityConfig {
                     .requestMatchers(DOCUMENTATION_OPENAPI).permitAll()
                     .anyRequest().authenticated())
             .csrf(csrf -> csrf.disable())
-            .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtMyAuthenticationConverter())))
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            .oauth2ResourceServer(
+                    oauth2 -> oauth2.jwt(jwt -> jwt
+                            .jwtAuthenticationConverter(jwtMyAuthenticationConverter())))
+            .sessionManagement(
+                    session -> session
+                            .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .exceptionHandling(
+                    exceptionHandling -> exceptionHandling
+                            .accessDeniedHandler(new CustomAccessDeniedHandler()))
+        ;
 
         return http.build();
     }

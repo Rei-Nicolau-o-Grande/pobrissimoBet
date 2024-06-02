@@ -23,7 +23,7 @@ public class AccessControlService {
 
         if (!currentUserId.equals(targetUserId) &&
                 !currentUserRoles.contains(RoleEnum.ADMIN.getName())) {
-            throw new AccessDeniedException("Você não tem permissão.");
+            throw new AccessDeniedException("Acesso Negado");
         }
     }
 }

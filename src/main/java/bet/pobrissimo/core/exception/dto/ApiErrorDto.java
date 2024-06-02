@@ -22,15 +22,18 @@ public record ApiErrorDto(
         String message,
 
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        Map<String, String> fields
+        Map<String, String> fields,
+
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        Object stakeTrace
 ) {
     public ApiErrorDto(LocalDateTime timestamp, String path, String method, Integer status, String error,
                        String message) {
-        this(timestamp, path, method, status, error, message, null);
+        this(timestamp, path, method, status, error, message, null, null);
     }
 
     public ApiErrorDto(LocalDateTime timestamp, String path, String method, Integer status, String error,
-                       String message, Map<String, String> fields) {
+                       String message, Map<String, String> fields, Object stakeTrace) {
         this.timestamp = timestamp;
         this.path = path;
         this.method = method;
@@ -38,5 +41,6 @@ public record ApiErrorDto(
         this.error = error;
         this.message = message;
         this.fields = fields;
+        this.stakeTrace = stakeTrace;
     }
 }

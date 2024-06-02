@@ -18,7 +18,8 @@ import java.time.LocalDateTime;
 public class ApiGlobalExceptionHandler {
 
 //    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<ApiErrorDto> handleGenericException(HttpServletRequest request, Exception ex) {
+//    public ResponseEntity<ApiErrorDto> handlerGenericException(HttpServletRequest request,
+//                                                               RuntimeException ex) {
 //        return ResponseEntity
 //                .status(HttpStatus.INTERNAL_SERVER_ERROR)
 //                .contentType(MediaType.APPLICATION_JSON)
@@ -28,13 +29,17 @@ public class ApiGlobalExceptionHandler {
 //                        request.getMethod(),
 //                        HttpStatus.INTERNAL_SERVER_ERROR.value(),
 //                        HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-//                        ex.getMessage()
+//                        ex.getMessage(),
+//                        null,
+//                        ex.getClass()
 //                ));
 //    }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ApiErrorDto> handleAccessDeniedException(HttpServletRequest request,
-                                                                   AccessDeniedException ex) {
+    @ExceptionHandler({
+            AccessDeniedException.class,
+    })
+    public ResponseEntity<ApiErrorDto> handlerForbiddenException(HttpServletRequest request,
+                                                                   RuntimeException ex) {
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -48,9 +53,11 @@ public class ApiGlobalExceptionHandler {
                 ));
     }
 
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ApiErrorDto> handleBadCredentialsException(HttpServletRequest request,
-                                                                     BadCredentialsException ex) {
+    @ExceptionHandler({
+            BadCredentialsException.class,
+    })
+    public ResponseEntity<ApiErrorDto> handlerUnauthorizedException(HttpServletRequest request,
+                                                                     RuntimeException ex) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -68,7 +75,7 @@ public class ApiGlobalExceptionHandler {
             InvalidUUIDException.class,
             EntityNotFoundException.class
     })
-    public ResponseEntity<ApiErrorDto> handleNotFoundException(HttpServletRequest request, RuntimeException ex) {
+    public ResponseEntity<ApiErrorDto> handlerNotFoundException(HttpServletRequest request, RuntimeException ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .contentType(MediaType.APPLICATION_JSON)

@@ -82,11 +82,6 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Page<UserResponseDto> search(String username, String email, Boolean isActive, String role, Pageable pageable) {
-
-        // Log dos parâmetros recebidos no serviço
-        System.out.println("Service - Username: " + username + ", Email: " + email +
-                ", isActive: " + isActive + ", Role: " + role);
-
         Specification<User> specification = UserSpecifications.searchByCriteria(username, email, isActive, role);
 
         Page<User> users = this.userRepository.findAll(specification, pageable);
