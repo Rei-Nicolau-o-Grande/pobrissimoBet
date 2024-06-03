@@ -36,6 +36,9 @@ public class User {
 
     private Boolean isActive;
 
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Wallet wallet;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_roles",
@@ -45,7 +48,7 @@ public class User {
     )
     private Set<Role> roles;
 
-    public User(UUID id, String username, String email, String password, Instant createdAt, Instant updatedAt, Instant deactivatedAt, boolean isActive, Set<Role> roles) {
+    public User(UUID id, String username, String email, String password, Instant createdAt, Instant updatedAt, Instant deactivatedAt, Boolean isActive, Wallet wallet, Set<Role> roles) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -54,6 +57,7 @@ public class User {
         this.updatedAt = updatedAt;
         this.deactivatedAt = deactivatedAt;
         this.isActive = isActive;
+        this.wallet = wallet;
         this.roles = roles;
     }
 
@@ -141,6 +145,14 @@ public class User {
         isActive = active;
     }
 
+    public Wallet getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
+    }
+
     public Set<Role> getRoles() {
         return roles;
     }
@@ -154,12 +166,12 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return isActive == user.isActive && Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt) && Objects.equals(deactivatedAt, user.deactivatedAt) && Objects.equals(roles, user.roles);
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt) && Objects.equals(deactivatedAt, user.deactivatedAt) && Objects.equals(isActive, user.isActive) && Objects.equals(wallet, user.wallet) && Objects.equals(roles, user.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, email, password, createdAt, updatedAt, deactivatedAt, isActive, roles);
+        return Objects.hash(id, username, email, password, createdAt, updatedAt, deactivatedAt, isActive, wallet, roles);
     }
 
     @Override
@@ -173,6 +185,7 @@ public class User {
                 ", updatedAt=" + updatedAt +
                 ", deactivatedAt=" + deactivatedAt +
                 ", isActive=" + isActive +
+                ", wallet=" + wallet +
                 ", roles=" + roles +
                 '}';
     }

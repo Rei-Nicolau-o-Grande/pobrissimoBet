@@ -1,5 +1,7 @@
 package bet.pobrissimo.core.dto.user;
 
+import bet.pobrissimo.core.dto.wallet.MyWalletResponseDto;
+import bet.pobrissimo.core.model.Wallet;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.Instant;
@@ -15,6 +17,8 @@ public record UserResponseDto(
         Instant createdAt,
 
         Boolean isActive,
+
+        MyWalletResponseDto wallet,
 
         Set<String> roles) {
 }

@@ -1,14 +1,16 @@
 package bet.pobrissimo.core.service;
 
-import bet.pobrissimo.core.specifications.UserSpecifications;
 import bet.pobrissimo.core.dto.user.MeResponseDto;
 import bet.pobrissimo.core.dto.user.UserRequestDto;
 import bet.pobrissimo.core.dto.user.UserResponseDto;
+import bet.pobrissimo.core.dto.wallet.MyWalletResponseDto;
 import bet.pobrissimo.core.enums.RoleEnum;
 import bet.pobrissimo.core.model.Role;
 import bet.pobrissimo.core.model.User;
+import bet.pobrissimo.core.model.Wallet;
 import bet.pobrissimo.core.repository.RoleRepository;
 import bet.pobrissimo.core.repository.UserRepository;
+import bet.pobrissimo.core.specifications.UserSpecifications;
 import bet.pobrissimo.infra.config.AccessControlService;
 import bet.pobrissimo.infra.config.AuthenticatedCurrentUser;
 import bet.pobrissimo.infra.exception.EntityNotFoundException;
@@ -22,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -30,16 +33,19 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
-    private RoleRepository roleRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
+    private final WalletService walletService;
 
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
-                       RoleRepository roleRepository) {
+                       RoleRepository roleRepository,
+                       WalletService walletService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+        this.walletService = walletService;
     }
 
     @Transactional
@@ -47,7 +53,8 @@ public class UserService {
         Role rolePlayer = this.roleRepository.findById(RoleEnum.PLAYER.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Role não encontrada."));
         User user = new User(dto, passwordEncoder.encode(dto.password()), rolePlayer);
-        userRepository.save(user);
+        this.walletService.create(user);
+        this.userRepository.save(user);
     }
 
     @Transactional
@@ -92,7 +99,8 @@ public class UserService {
     private Page<UserResponseDto> getUserResponseDtos(Pageable pageable, Page<User> users) {
         List<UserResponseDto> userDtos = users.stream()
                 .map(user -> new UserResponseDto(
-                        user.getId(), user.getUsername(), user.getEmail(), user.getCreatedAt(), user.isActive(),
+                        user.getId(), user.getUsername(), user.getEmail(), user.getCreatedAt(),
+                user.isActive(), new MyWalletResponseDto(user.getWallet().getAmount()),
                         user.getRoles().stream()
                         .map(Role::getName)
                         .collect(Collectors.toSet())))

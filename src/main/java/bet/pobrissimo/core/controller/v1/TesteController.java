@@ -2,6 +2,7 @@ package bet.pobrissimo.core.controller.v1;
 
 import bet.pobrissimo.core.enums.RoleEnum;
 import bet.pobrissimo.core.model.User;
+import bet.pobrissimo.core.model.Wallet;
 import bet.pobrissimo.core.repository.RoleRepository;
 import bet.pobrissimo.core.repository.UserRepository;
 import net.datafaker.Faker;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.Locale;
 import java.util.Set;
 
@@ -54,6 +56,12 @@ public class TesteController {
             user.setRoles(Set.of(rolePlayer));
             user.setActive(true);
             user.setCreatedAt(faker.date().birthday().toInstant());
+
+            Wallet wallet = new Wallet();
+            wallet.setUser(user);
+            wallet.setAmount(BigDecimal.valueOf(faker.number().randomDouble(2, 0, 1000)));
+            user.setWallet(wallet);
+
             this.userRepository.save(user);
         }
         return ResponseEntity.ok().build();

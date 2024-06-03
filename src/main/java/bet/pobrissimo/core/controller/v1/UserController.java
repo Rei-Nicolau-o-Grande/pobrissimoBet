@@ -4,6 +4,7 @@ import bet.pobrissimo.core.dto.PageableDto;
 import bet.pobrissimo.core.dto.user.MeResponseDto;
 import bet.pobrissimo.core.dto.user.UserRequestDto;
 import bet.pobrissimo.core.dto.user.UserResponseDto;
+import bet.pobrissimo.core.dto.wallet.MyWalletResponseDto;
 import bet.pobrissimo.core.model.Role;
 import bet.pobrissimo.core.service.UserService;
 import jakarta.validation.Valid;
@@ -50,6 +51,7 @@ public class UserController {
                 user.getEmail(),
                 user.getCreatedAt(),
                 user.isActive(),
+                new MyWalletResponseDto(user.getWallet().getAmount()),
                 user.getRoles().stream().map(Role::getName).collect(Collectors.toSet())
         ));
     }
