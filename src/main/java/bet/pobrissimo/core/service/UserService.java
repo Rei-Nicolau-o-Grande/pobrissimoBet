@@ -7,12 +7,12 @@ import bet.pobrissimo.core.dto.wallet.MyWalletResponseDto;
 import bet.pobrissimo.core.enums.RoleEnum;
 import bet.pobrissimo.core.model.Role;
 import bet.pobrissimo.core.model.User;
-import bet.pobrissimo.core.model.Wallet;
 import bet.pobrissimo.core.repository.RoleRepository;
 import bet.pobrissimo.core.repository.UserRepository;
 import bet.pobrissimo.core.specifications.UserSpecifications;
 import bet.pobrissimo.infra.config.AccessControlService;
 import bet.pobrissimo.infra.config.AuthenticatedCurrentUser;
+import bet.pobrissimo.infra.exception.AccessDeniedException;
 import bet.pobrissimo.infra.exception.EntityNotFoundException;
 import bet.pobrissimo.infra.util.ValidateConvertStringToUUID;
 import org.springframework.beans.BeanUtils;
@@ -24,9 +24,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -83,13 +83,27 @@ public class UserService {
     public User findById(String userId) {
         var userIdUUID = ValidateConvertStringToUUID.validate(userId, "Usuário não encontrado.");
 
-        return this.userRepository.findById(userIdUUID)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
+        Optional<User> userOptional = this.userRepository.findById(userIdUUID);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            boolean isAdmin = user.getRoles().stream()
+                    .anyMatch(role -> role.getName().equals(RoleEnum.ADMIN.getName()));
+
+            if (isAdmin) {
+                throw new AccessDeniedException("Admin não pode ter carteira.");
+            }
+
+            return user;
+        } else {
+            throw new EntityNotFoundException("Usuário não encontrado.");
+        }
     }
 
     @Transactional(readOnly = true)
-    public Page<UserResponseDto> search(String username, String email, Boolean isActive, String role, Pageable pageable) {
-        Specification<User> specification = UserSpecifications.searchByCriteria(username, email, isActive, role);
+    public Page<UserResponseDto> search(String username, String email, Boolean isActive, Pageable pageable) {
+        Specification<User> specification = UserSpecifications.searchByCriteria(username, email, isActive);
 
         Page<User> users = this.userRepository.findAll(specification, pageable);
 

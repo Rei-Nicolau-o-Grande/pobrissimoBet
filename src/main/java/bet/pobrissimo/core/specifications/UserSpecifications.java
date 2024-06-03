@@ -6,7 +6,10 @@ import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
 public class UserSpecifications {
-    public static Specification<User> searchByCriteria(String username, String email, Boolean isActive, String role) {
+
+    private static final String ROLE_PLAYER = "Player";
+
+    public static Specification<User> searchByCriteria(String username, String email, Boolean isActive) {
         return (root, query, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.conjunction();
 
@@ -28,13 +31,12 @@ public class UserSpecifications {
                                 root.get("isActive"),
                                 isActive));
             }
-            if (role != null && !role.isEmpty()) {
-                Join<Object, Object> rolesJoin = root.join("roles");
-                predicate = criteriaBuilder.and(predicate,
-                        criteriaBuilder.equal(
-                                rolesJoin.get("name"),
-                                role));
-            }
+                        // Adiciona condição para role
+            Join<Object, Object> rolesJoin = root.join("roles");
+            predicate = criteriaBuilder.and(predicate,
+                    criteriaBuilder.equal(
+                            rolesJoin.get("name"),
+                            ROLE_PLAYER));
 
             return predicate;
         };

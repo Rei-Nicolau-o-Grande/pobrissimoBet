@@ -69,10 +69,9 @@ public class UserController {
             @RequestParam(value = "username", required = false) String username,
             @RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "isActive", required = false) Boolean isActive,
-            @RequestParam(value = "role", required = false) String role,
             Pageable pageable) {
 
-        Page<UserResponseDto> users = this.userService.search(username, email, isActive, role, pageable);
+        Page<UserResponseDto> users = this.userService.search(username, email, isActive, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new PageableDto(users.getContent(), users.getNumber(), users.getSize(), users.getNumberOfElements(),
                         users.getTotalPages(), users.getTotalElements(), users.getSort().toString())
