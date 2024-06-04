@@ -122,10 +122,13 @@ public class UserService {
         return new PageImpl<>(userDtos, pageable, users.getTotalElements());
     }
 
+    @Transactional(readOnly = true)
     public MeResponseDto me() {
-        UUID userId = AuthenticatedCurrentUser.getUserId();
-        String userName = AuthenticatedCurrentUser.getUserName();
-        String email = AuthenticatedCurrentUser.getUserEmail();
+        var user = this.findById(AuthenticatedCurrentUser.getUserId().toString());
+
+        UUID userId = user.getId();
+        String userName = user.getUsername();
+        String email = user.getEmail();
 
         return new MeResponseDto(userId, userName, email);
     }
