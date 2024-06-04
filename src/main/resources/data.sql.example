@@ -1,0 +1,11 @@
+CREATE SCHEMA IF NOT EXISTS public;
+CREATE SCHEMA IF NOT EXISTS bank;
+CREATE SCHEMA IF NOT EXISTS game;
+
+INSERT INTO public.roles (id, name)
+VALUES (1, 'Admin')
+    ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.roles (id, name)
+VALUES (2, 'Player')
+    ON CONFLICT (id) DO NOTHING;

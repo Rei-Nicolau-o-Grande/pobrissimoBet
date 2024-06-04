@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(schema = "public", name = "wallet")
+@Table(schema = "bank", name = "wallets")
 public class Wallet {
 
     @Id
