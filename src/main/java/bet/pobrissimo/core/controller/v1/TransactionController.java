@@ -23,6 +23,6 @@ public class TransactionController {
     public ResponseEntity<?> createTransaction(@PathVariable("walletId") String walletId,
                                                @RequestBody @Valid TransactionRequestDto dto) {
         this.transactionService.createTransaction(walletId, dto);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

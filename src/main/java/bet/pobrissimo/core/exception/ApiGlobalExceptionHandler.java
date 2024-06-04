@@ -89,9 +89,8 @@ public class ApiGlobalExceptionHandler {
 
     @ExceptionHandler({
             TransactionWithDrawException.class,
+            TransactionTypeDoesNotExistException.class,
             IllegalArgumentException.class,
-            HttpMessageNotReadableException.class,
-            HttpMessageNotReadableException.class
     })
     public ResponseEntity<ApiErrorDto> handlerBadRequestException(HttpServletRequest request, RuntimeException ex) {
         return ResponseEntity
@@ -105,5 +104,17 @@ public class ApiGlobalExceptionHandler {
                         HttpStatus.BAD_REQUEST.getReasonPhrase(),
                         ex.getMessage()
                 ));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiErrorDto> handleHttpMessageNotReadableException(HttpServletRequest request, HttpMessageNotReadableException ex) {
+        ApiErrorDto errorDto = new ApiErrorDto(
+                LocalDateTime.now(),
+                request.getRequestURI(),
+                request.getMethod(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ex.getRootCause().getMessage());
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
     }
 }

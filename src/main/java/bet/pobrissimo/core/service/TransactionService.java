@@ -1,9 +1,10 @@
 package bet.pobrissimo.core.service;
 
 import bet.pobrissimo.core.dtos.transaction.TransactionRequestDto;
+import bet.pobrissimo.core.enums.TransactionEnum;
 import bet.pobrissimo.core.model.Transaction;
 import bet.pobrissimo.core.repository.TransactionRepository;
-import bet.pobrissimo.infra.exception.HttpMessageNotReadableException;
+import bet.pobrissimo.infra.exception.TransactionTypeDoesNotExistException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,9 +22,6 @@ public class TransactionService {
 
     @Transactional
     public void createTransaction(String walletId, TransactionRequestDto dto) {
-        if (dto.type() == null) {
-            throw new IllegalArgumentException("Tipo de transação não informado.");
-        }
         switch (dto.type()) {
             case DEPOSIT -> {
                 this.transactionRepository.save(new Transaction(walletId, dto.value(), dto.type()));
@@ -33,7 +31,14 @@ public class TransactionService {
                 this.transactionRepository.save(new Transaction(walletId, dto.value(), dto.type()));
                 this.walletService.withdraw(walletId, dto.value());
             }
-            default -> throw new HttpMessageNotReadableException("Opção de transação inválido.");
+
+            default -> {
+                for (TransactionEnum type : TransactionEnum.values()) {
+                    if (type.name().equalsIgnoreCase(String.valueOf(dto.type()))) {
+                        throw new TransactionTypeDoesNotExistException("Opção de transação inválido. " + dto.type());
+                    }
+                }
+            }
         }
     }
 
