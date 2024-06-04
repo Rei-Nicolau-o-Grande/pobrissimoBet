@@ -1,4 +1,4 @@
-package bet.pobrissimo.core.dto;
+package bet.pobrissimo.core.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

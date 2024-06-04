@@ -1,7 +1,7 @@
 package bet.pobrissimo.core.controller.v1;
 
-import bet.pobrissimo.core.dto.auth.LoginRequest;
-import bet.pobrissimo.core.dto.auth.LoginResponse;
+import bet.pobrissimo.core.dtos.auth.LoginRequest;
+import bet.pobrissimo.core.dtos.auth.LoginResponse;
 import bet.pobrissimo.core.repository.UserRepository;
 import bet.pobrissimo.core.service.TokenService;
 import bet.pobrissimo.infra.exception.BadCredentialsException;

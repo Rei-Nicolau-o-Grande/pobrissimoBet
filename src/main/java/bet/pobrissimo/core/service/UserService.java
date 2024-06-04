@@ -1,9 +1,9 @@
 package bet.pobrissimo.core.service;
 
-import bet.pobrissimo.core.dto.user.MeResponseDto;
-import bet.pobrissimo.core.dto.user.UserRequestDto;
-import bet.pobrissimo.core.dto.user.UserResponseDto;
-import bet.pobrissimo.core.dto.wallet.MyWalletResponseDto;
+import bet.pobrissimo.core.dtos.user.MeResponseDto;
+import bet.pobrissimo.core.dtos.user.UserRequestDto;
+import bet.pobrissimo.core.dtos.user.UserResponseDto;
+import bet.pobrissimo.core.dtos.wallet.MyWalletResponseDto;
 import bet.pobrissimo.core.enums.RoleEnum;
 import bet.pobrissimo.core.model.Role;
 import bet.pobrissimo.core.model.User;

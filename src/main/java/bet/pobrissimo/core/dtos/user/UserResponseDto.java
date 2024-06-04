@@ -1,7 +1,6 @@
-package bet.pobrissimo.core.dto.user;
+package bet.pobrissimo.core.dtos.user;
 
-import bet.pobrissimo.core.dto.wallet.MyWalletResponseDto;
-import bet.pobrissimo.core.model.Wallet;
+import bet.pobrissimo.core.dtos.wallet.MyWalletResponseDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.Instant;

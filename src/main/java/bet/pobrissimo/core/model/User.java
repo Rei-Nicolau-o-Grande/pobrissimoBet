@@ -1,6 +1,6 @@
 package bet.pobrissimo.core.model;
 
-import bet.pobrissimo.core.dto.user.UserRequestDto;
+import bet.pobrissimo.core.dtos.user.UserRequestDto;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;

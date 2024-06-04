@@ -1,4 +1,4 @@
-package bet.pobrissimo.core.dto.user;
+package bet.pobrissimo.core.dtos.user;
 
 import java.util.UUID;
 

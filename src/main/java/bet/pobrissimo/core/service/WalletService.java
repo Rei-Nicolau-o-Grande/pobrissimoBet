@@ -1,11 +1,13 @@
 package bet.pobrissimo.core.service;
 
-import bet.pobrissimo.core.dto.wallet.MyWalletResponseDto;
+import bet.pobrissimo.core.dtos.wallet.MyWalletResponseDto;
 import bet.pobrissimo.core.model.User;
 import bet.pobrissimo.core.model.Wallet;
 import bet.pobrissimo.core.repository.TransactionRepository;
 import bet.pobrissimo.core.repository.WalletRepository;
 import bet.pobrissimo.infra.config.AuthenticatedCurrentUser;
+import bet.pobrissimo.infra.exception.EntityNotFoundException;
+import bet.pobrissimo.infra.util.ValidateConvertStringToUUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,5 +43,13 @@ public class WalletService {
     @Transactional(readOnly = true)
     public BigDecimal getAmountByUserId(UUID userId) {
         return this.walletRepository.getAmountByUserId(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public MyWalletResponseDto findWalletById(String walletId) {
+        var walletUUID = ValidateConvertStringToUUID.validate(walletId, "Wallet não encontrada.");
+        var wallet = this.walletRepository.findById(walletUUID)
+                .orElseThrow(() -> new EntityNotFoundException("Wallet não encontrada."));
+        return new MyWalletResponseDto(wallet.getAmount());
     }
 }

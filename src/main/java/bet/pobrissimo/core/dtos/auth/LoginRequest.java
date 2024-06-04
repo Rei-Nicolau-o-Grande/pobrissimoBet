@@ -1,4 +1,4 @@
-package bet.pobrissimo.core.dto.auth;
+package bet.pobrissimo.core.dtos.auth;
 
 public record LoginRequest(String email, String password) {
 }
