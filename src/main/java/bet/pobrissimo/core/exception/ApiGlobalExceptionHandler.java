@@ -1,14 +1,12 @@
 package bet.pobrissimo.core.exception;
 
 import bet.pobrissimo.core.exception.dto.ApiErrorDto;
-import bet.pobrissimo.infra.exception.AccessDeniedException;
-import bet.pobrissimo.infra.exception.BadCredentialsException;
-import bet.pobrissimo.infra.exception.EntityNotFoundException;
-import bet.pobrissimo.infra.exception.InvalidUUIDException;
+import bet.pobrissimo.infra.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -85,6 +83,26 @@ public class ApiGlobalExceptionHandler {
                         request.getMethod(),
                         HttpStatus.NOT_FOUND.value(),
                         HttpStatus.NOT_FOUND.getReasonPhrase(),
+                        ex.getMessage()
+                ));
+    }
+
+    @ExceptionHandler({
+            TransactionWithDrawException.class,
+            IllegalArgumentException.class,
+            HttpMessageNotReadableException.class,
+            HttpMessageNotReadableException.class
+    })
+    public ResponseEntity<ApiErrorDto> handlerBadRequestException(HttpServletRequest request, RuntimeException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ApiErrorDto(
+                        LocalDateTime.now(),
+                        request.getRequestURI(),
+                        request.getMethod(),
+                        HttpStatus.BAD_REQUEST.value(),
+                        HttpStatus.BAD_REQUEST.getReasonPhrase(),
                         ex.getMessage()
                 ));
     }

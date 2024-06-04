@@ -5,6 +5,7 @@ import bet.pobrissimo.core.dtos.auth.LoginResponse;
 import bet.pobrissimo.core.repository.UserRepository;
 import bet.pobrissimo.core.service.TokenService;
 import bet.pobrissimo.infra.exception.BadCredentialsException;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +27,7 @@ public class TokenController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest request) {
         var user = this.userRepository.findByEmail(request.email());
 
         if (user.isEmpty() || !tokenService.validatePassword(request.password(), user.get().getPassword())) {

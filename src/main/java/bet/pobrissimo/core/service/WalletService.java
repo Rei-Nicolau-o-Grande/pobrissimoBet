@@ -1,12 +1,15 @@
 package bet.pobrissimo.core.service;
 
 import bet.pobrissimo.core.dtos.wallet.MyWalletResponseDto;
+import bet.pobrissimo.core.model.Transaction;
 import bet.pobrissimo.core.model.User;
 import bet.pobrissimo.core.model.Wallet;
 import bet.pobrissimo.core.repository.TransactionRepository;
 import bet.pobrissimo.core.repository.WalletRepository;
+import bet.pobrissimo.infra.config.AccessControlService;
 import bet.pobrissimo.infra.config.AuthenticatedCurrentUser;
 import bet.pobrissimo.infra.exception.EntityNotFoundException;
+import bet.pobrissimo.infra.exception.TransactionWithDrawException;
 import bet.pobrissimo.infra.util.ValidateConvertStringToUUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,10 +49,28 @@ public class WalletService {
     }
 
     @Transactional(readOnly = true)
-    public MyWalletResponseDto findWalletById(String walletId) {
+    public Wallet findWalletById(String walletId) {
         var walletUUID = ValidateConvertStringToUUID.validate(walletId, "Wallet não encontrada.");
         var wallet = this.walletRepository.findById(walletUUID)
                 .orElseThrow(() -> new EntityNotFoundException("Wallet não encontrada."));
-        return new MyWalletResponseDto(wallet.getAmount());
+        return wallet;
+    }
+
+    @Transactional
+    public void deposit(String walletId, BigDecimal value) {
+        var wallet = this.findWalletById(walletId);
+        wallet.setAmount(wallet.getAmount().add(value));
+        this.walletRepository.save(wallet);
+    }
+
+    @Transactional
+    public void withdraw(String walletId, BigDecimal value) {
+        var wallet = this.findWalletById(walletId);
+        // AccessControlService.checkPermission(wallet.getUser().getId());
+        if (value.doubleValue() > wallet.getAmount().doubleValue()) {
+            throw new TransactionWithDrawException("Saldo insuficiente.");
+        }
+        wallet.setAmount(wallet.getAmount().subtract(value));
+        this.walletRepository.save(wallet);
     }
 }

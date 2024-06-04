@@ -35,6 +35,13 @@ public class Transaction {
     public Transaction() {
     }
 
+    public Transaction(String walletId, BigDecimal value, TransactionEnum type) {
+        this.value = value;
+        this.type = type;
+        this.wallet = new Wallet();
+        this.wallet.setId(UUID.fromString(walletId));
+    }
+
     public UUID getId() {
         return id;
     }

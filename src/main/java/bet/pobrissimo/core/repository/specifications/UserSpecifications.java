@@ -1,4 +1,4 @@
-package bet.pobrissimo.core.specifications;
+package bet.pobrissimo.core.repository.specifications;
 
 import bet.pobrissimo.core.model.User;
 import jakarta.persistence.criteria.Join;
@@ -31,7 +31,7 @@ public class UserSpecifications {
                                 root.get("isActive"),
                                 isActive));
             }
-                        // Adiciona condição para role
+
             Join<Object, Object> rolesJoin = root.join("roles");
             predicate = criteriaBuilder.and(predicate,
                     criteriaBuilder.equal(

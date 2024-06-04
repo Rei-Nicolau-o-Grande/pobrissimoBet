@@ -9,7 +9,7 @@ import bet.pobrissimo.core.model.Role;
 import bet.pobrissimo.core.model.User;
 import bet.pobrissimo.core.repository.RoleRepository;
 import bet.pobrissimo.core.repository.UserRepository;
-import bet.pobrissimo.core.specifications.UserSpecifications;
+import bet.pobrissimo.core.repository.specifications.UserSpecifications;
 import bet.pobrissimo.infra.config.AccessControlService;
 import bet.pobrissimo.infra.config.AuthenticatedCurrentUser;
 import bet.pobrissimo.infra.exception.AccessDeniedException;

@@ -4,5 +4,7 @@ import bet.pobrissimo.core.enums.TransactionEnum;
 
 import java.math.BigDecimal;
 
-public record TransactionDto(BigDecimal value, TransactionEnum type) {
+public record TransactionRequestDto(
+        BigDecimal value,
+        TransactionEnum type) {
 }
