@@ -71,9 +71,7 @@ public class ApiGlobalExceptionHandler {
 
     @ExceptionHandler({
             InvalidUUIDException.class,
-            WalletNotFoundException.class,
             EntityNotFoundException.class,
-            IllegalArgumentException.class,
     })
     public ResponseEntity<ApiErrorDto> handlerNotFoundException(HttpServletRequest request, RuntimeException ex) {
         return ResponseEntity

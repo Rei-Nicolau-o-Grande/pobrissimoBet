@@ -22,10 +22,12 @@ public class TransactionService {
     public void createTransaction(String walletId, TransactionRequestDto dto) {
         switch (dto.type()) {
             case DEPOSIT -> {
+                this.walletService.findWalletById(walletId);
                 this.transactionRepository.save(new Transaction(walletId, dto.value(), dto.type()));
                 this.walletService.deposit(walletId, dto.value());
             }
             case WITHDRAW -> {
+                this.walletService.findWalletById(walletId);
                 this.transactionRepository.save(new Transaction(walletId, dto.value(), dto.type()));
                 this.walletService.withdraw(walletId, dto.value());
             }

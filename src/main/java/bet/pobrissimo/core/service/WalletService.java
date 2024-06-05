@@ -7,6 +7,7 @@ import bet.pobrissimo.core.repository.TransactionRepository;
 import bet.pobrissimo.core.repository.WalletRepository;
 import bet.pobrissimo.infra.config.AccessControlService;
 import bet.pobrissimo.infra.config.AuthenticatedCurrentUser;
+import bet.pobrissimo.infra.exception.EntityNotFoundException;
 import bet.pobrissimo.infra.exception.InvalidUUIDException;
 import bet.pobrissimo.infra.exception.TransactionWithDrawException;
 import bet.pobrissimo.infra.util.ValidateConvertStringToUUID;
@@ -49,11 +50,10 @@ public class WalletService {
 
     @Transactional(readOnly = true)
     public Wallet findWalletById(String walletId) {
-        UUID walletUUID = ValidateConvertStringToUUID.validate(walletId, "Wallet não encontrada UUID errado.");
+        UUID walletUUID = ValidateConvertStringToUUID.validate(walletId, "Wallet não encontrada.");
 
-        var wallet = this.walletRepository.findById(walletUUID)
-                .orElseThrow(() -> new InvalidUUIDException("Wallet não encontrada."));
-        return wallet;
+        return this.walletRepository.findById(walletUUID)
+                .orElseThrow(() -> new EntityNotFoundException("Wallet não encontrada."));
     }
 
     @Transactional
