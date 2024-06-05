@@ -10,7 +10,7 @@ public enum TransactionEnum {
     @JsonCreator
     public static TransactionEnum fromValue(String value) {
         if (value.isBlank()) {
-            throw new IllegalArgumentException("O tipo de transação não pode ser nulo ou vazio.");
+            throw new TransactionTypeDoesNotExistException("O tipo de transação não pode ser nulo ou vazio.");
         }
 
         for (TransactionEnum type : values()) {

@@ -1,14 +1,13 @@
 package bet.pobrissimo.core.service;
 
 import bet.pobrissimo.core.dtos.wallet.MyWalletResponseDto;
-import bet.pobrissimo.core.model.Transaction;
 import bet.pobrissimo.core.model.User;
 import bet.pobrissimo.core.model.Wallet;
 import bet.pobrissimo.core.repository.TransactionRepository;
 import bet.pobrissimo.core.repository.WalletRepository;
 import bet.pobrissimo.infra.config.AccessControlService;
 import bet.pobrissimo.infra.config.AuthenticatedCurrentUser;
-import bet.pobrissimo.infra.exception.EntityNotFoundException;
+import bet.pobrissimo.infra.exception.InvalidUUIDException;
 import bet.pobrissimo.infra.exception.TransactionWithDrawException;
 import bet.pobrissimo.infra.util.ValidateConvertStringToUUID;
 import org.springframework.stereotype.Service;
@@ -50,15 +49,17 @@ public class WalletService {
 
     @Transactional(readOnly = true)
     public Wallet findWalletById(String walletId) {
-        var walletUUID = ValidateConvertStringToUUID.validate(walletId, "Wallet não encontrada.");
+        UUID walletUUID = ValidateConvertStringToUUID.validate(walletId, "Wallet não encontrada UUID errado.");
+
         var wallet = this.walletRepository.findById(walletUUID)
-                .orElseThrow(() -> new EntityNotFoundException("Wallet não encontrada."));
+                .orElseThrow(() -> new InvalidUUIDException("Wallet não encontrada."));
         return wallet;
     }
 
     @Transactional
     public void deposit(String walletId, BigDecimal value) {
         var wallet = this.findWalletById(walletId);
+        AccessControlService.checkPermission(wallet.getUser().getId().toString());
         wallet.setAmount(wallet.getAmount().add(value));
         this.walletRepository.save(wallet);
     }
@@ -66,7 +67,7 @@ public class WalletService {
     @Transactional
     public void withdraw(String walletId, BigDecimal value) {
         var wallet = this.findWalletById(walletId);
-        // AccessControlService.checkPermission(wallet.getUser().getId());
+        AccessControlService.checkPermission(wallet.getUser().getId().toString());
         if (value.doubleValue() > wallet.getAmount().doubleValue()) {
             throw new TransactionWithDrawException("Saldo insuficiente.");
         }

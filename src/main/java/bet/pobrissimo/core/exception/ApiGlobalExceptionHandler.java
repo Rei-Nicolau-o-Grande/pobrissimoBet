@@ -71,7 +71,9 @@ public class ApiGlobalExceptionHandler {
 
     @ExceptionHandler({
             InvalidUUIDException.class,
-            EntityNotFoundException.class
+            WalletNotFoundException.class,
+            EntityNotFoundException.class,
+            IllegalArgumentException.class,
     })
     public ResponseEntity<ApiErrorDto> handlerNotFoundException(HttpServletRequest request, RuntimeException ex) {
         return ResponseEntity
@@ -90,7 +92,6 @@ public class ApiGlobalExceptionHandler {
     @ExceptionHandler({
             TransactionWithDrawException.class,
             TransactionTypeDoesNotExistException.class,
-            IllegalArgumentException.class,
     })
     public ResponseEntity<ApiErrorDto> handlerBadRequestException(HttpServletRequest request, RuntimeException ex) {
         return ResponseEntity
@@ -107,7 +108,7 @@ public class ApiGlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ApiErrorDto> handleHttpMessageNotReadableException(HttpServletRequest request, HttpMessageNotReadableException ex) {
+    public ResponseEntity<ApiErrorDto> handlerHttpMessageNotReadableException(HttpServletRequest request, HttpMessageNotReadableException ex) {
         ApiErrorDto errorDto = new ApiErrorDto(
                 LocalDateTime.now(),
                 request.getRequestURI(),
