@@ -1,10 +1,8 @@
 package bet.pobrissimo.core.service;
 
 import bet.pobrissimo.core.dtos.transaction.TransactionRequestDto;
-import bet.pobrissimo.core.enums.TransactionEnum;
 import bet.pobrissimo.core.model.Transaction;
 import bet.pobrissimo.core.repository.TransactionRepository;
-import bet.pobrissimo.infra.exception.TransactionTypeDoesNotExistException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,14 +28,6 @@ public class TransactionService {
             case WITHDRAW -> {
                 this.transactionRepository.save(new Transaction(walletId, dto.value(), dto.type()));
                 this.walletService.withdraw(walletId, dto.value());
-            }
-
-            default -> {
-                for (TransactionEnum type : TransactionEnum.values()) {
-                    if (type.name().equalsIgnoreCase(String.valueOf(dto.type()))) {
-                        throw new TransactionTypeDoesNotExistException("Opção de transação inválido. " + dto.type());
-                    }
-                }
             }
         }
     }
