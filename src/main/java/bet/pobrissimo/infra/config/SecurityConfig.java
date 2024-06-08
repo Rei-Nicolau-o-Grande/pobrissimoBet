@@ -21,6 +21,8 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -29,6 +31,24 @@ import java.security.interfaces.RSAPublicKey;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+
+    @Value("${cors.allowed.origins.prod}")
+    private String allowedOriginsProd;
+
+    @Value("${cors.allowed.origins.test}")
+    private String allowedOriginsTest;
+
+    @Value("${cors.allowed.origins.dev}")
+    private String allowedOriginsDev;
+
+    @Value("${cors.allowed.mapping}")
+    private String allowedMapping;
+
+    @Value("${cors.allowed.methods}")
+    private String[] allowedMethods;
+
+    @Value("${cors.allowed.headers}")
+    private String[] allowedHeaders;
 
     @Value("${jwt.public.key}")
     private RSAPublicKey publicKey;
@@ -80,6 +100,20 @@ public class SecurityConfig {
         JWK jwk = new RSAKey.Builder(this.publicKey).privateKey(this.privateKey).build();
         var jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry
+                        .addMapping(allowedMapping)
+                        .allowedOrigins(allowedOriginsDev)
+                        .allowedMethods(allowedMethods)
+                        .allowedHeaders(allowedHeaders);
+            }
+        };
     }
 
     @Bean
