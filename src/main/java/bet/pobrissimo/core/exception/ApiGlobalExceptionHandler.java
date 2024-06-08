@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -105,8 +107,31 @@ public class ApiGlobalExceptionHandler {
                 ));
     }
 
+    @ExceptionHandler({
+            MethodArgumentNotValidException.class,
+    })
+    public ResponseEntity<ApiErrorDto> handlerMethodArgumentNotValidException(HttpServletRequest request,
+                                                                              MethodArgumentNotValidException ex,
+                                                                              BindingResult result) {
+
+        ApiErrorDto apiErrorDto = new ApiErrorDto(
+                LocalDateTime.now(),
+                request.getRequestURI(),
+                request.getMethod(),
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase(),
+                "Campos inválidos"
+        );
+        apiErrorDto = apiErrorDto.addErrorField(result);
+        return ResponseEntity
+                .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(apiErrorDto);
+    }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ApiErrorDto> handlerHttpMessageNotReadableException(HttpServletRequest request, HttpMessageNotReadableException ex) {
+    public ResponseEntity<ApiErrorDto> handlerHttpMessageNotReadableException(HttpServletRequest request,
+                                                                              HttpMessageNotReadableException ex) {
         ApiErrorDto errorDto = new ApiErrorDto(
                 LocalDateTime.now(),
                 request.getRequestURI(),

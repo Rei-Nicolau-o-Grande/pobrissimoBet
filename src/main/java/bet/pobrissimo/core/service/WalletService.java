@@ -8,7 +8,6 @@ import bet.pobrissimo.core.repository.WalletRepository;
 import bet.pobrissimo.infra.config.AccessControlService;
 import bet.pobrissimo.infra.config.AuthenticatedCurrentUser;
 import bet.pobrissimo.infra.exception.EntityNotFoundException;
-import bet.pobrissimo.infra.exception.InvalidUUIDException;
 import bet.pobrissimo.infra.exception.TransactionWithDrawException;
 import bet.pobrissimo.infra.util.ValidateConvertStringToUUID;
 import org.springframework.stereotype.Service;

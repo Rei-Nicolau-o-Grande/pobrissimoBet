@@ -34,4 +34,13 @@ public class TransactionService {
         }
     }
 
+//    @Transactional(readOnly = true)
+//    public void verifyTransaction(String walletId, TransactionRequestDto dto) {
+//        switch (dto.type()) {
+//            case DEPOSIT -> {
+//                this.walletService.findWalletById(walletId);
+//
+//            }
+//        }
+//    }
 }
