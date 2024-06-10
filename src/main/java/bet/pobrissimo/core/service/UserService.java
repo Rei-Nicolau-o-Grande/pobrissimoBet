@@ -92,7 +92,7 @@ public class UserService {
                     .anyMatch(role -> role.getName().equals(RoleEnum.ADMIN.getName()));
 
             if (isAdmin) {
-                throw new AccessDeniedException("Admin não pode ter carteira.");
+                throw new AccessDeniedException("Admin não pode acessar esse recurso.");
             }
 
             return user;
