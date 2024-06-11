@@ -2,10 +2,23 @@ CREATE SCHEMA IF NOT EXISTS public;
 CREATE SCHEMA IF NOT EXISTS bank;
 CREATE SCHEMA IF NOT EXISTS game;
 
+-- Criar a tabela roles se ela não existir
+CREATE TABLE IF NOT EXISTS public.roles
+(
+    id
+    SERIAL
+    PRIMARY
+    KEY,
+    name
+    VARCHAR
+(
+    255
+) UNIQUE NOT NULL
+    );
+
+-- Inserir dados na tabela roles
 INSERT INTO public.roles (id, name)
-VALUES (1, 'Admin')
-    ON CONFLICT (id) DO NOTHING;
+VALUES (1, 'Admin') ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.roles (id, name)
-VALUES (2, 'Player')
-    ON CONFLICT (id) DO NOTHING;
+VALUES (2, 'Player') ON CONFLICT (id) DO NOTHING;
