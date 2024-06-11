@@ -1,0 +1,69 @@
+services:
+
+  db:
+    image: postgres:latest
+    restart: always
+    container_name: db_probissimo_bet
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    networks:
+      - rede_probissimo_bet
+    volumes:
+      - ./.docker/postgres:/data/postgres
+      - ./.docker/postgres/init:/docker-entrypoint-initdb.d
+      - ./.docker/postgres/log:/var/log/postgresql
+      - ./.docker/postgres/conf:/etc/postgresql
+      - ./.docker/postgres/run:/var/run/postgresql
+      - ./.docker/postgres/lib:/var/lib/postgresql
+      - ./.docker/postgres/tmp:/tmp
+      - ./src/main/resources/data.sql:/docker-entrypoint-initdb.d/data.sql
+    command: ["postgres", "-c", "max_connections=200"]
+
+  redis:
+    hostname: redis
+    image: redis:latest
+    container_name: redis_probissimo_bet
+    restart: always
+    ports:
+      - 6379:6379
+    networks:
+      - rede_probissimo_bet
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    restart: always
+    depends_on:
+      - db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: 123
+    ports:
+      - 5050:5050
+    networks:
+      - rede_probissimo_bet
+
+  app:
+    image: probissimo_bet
+    build:
+      context: .
+    container_name: app_probissimo_bet
+    restart: always
+    depends_on:
+      - db
+      - redis
+      - pgadmin
+    env_file:
+      - .env
+    ports:
+      - 8080:8080
+    networks:
+      - rede_probissimo_bet
+
+networks:
+  rede_probissimo_bet:
+    driver: bridge

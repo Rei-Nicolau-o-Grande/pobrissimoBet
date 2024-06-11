@@ -36,10 +36,9 @@ public class TesteController {
         this.roleRepository = roleRepository;
     }
 
-    @GetMapping()
-    @PreAuthorize("hasRole('ROLE_Admin') or hasRole('ROLE_Player')")
+    @GetMapping("/ok")
     public String teste() {
-        return "Teste";
+        return "ok";
     }
 
     @GetMapping("/add-users/{number}")
