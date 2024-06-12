@@ -14,6 +14,7 @@ import bet.pobrissimo.infra.config.AccessControlService;
 import bet.pobrissimo.infra.config.AuthenticatedCurrentUser;
 import bet.pobrissimo.infra.exception.AccessDeniedException;
 import bet.pobrissimo.infra.exception.EntityNotFoundException;
+import bet.pobrissimo.infra.exception.PasswordInvalidException;
 import bet.pobrissimo.infra.util.ValidateConvertStringToUUID;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -37,21 +38,27 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final WalletService walletService;
+    private final PasswordService passwordService;
 
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
                        RoleRepository roleRepository,
-                       WalletService walletService) {
+                       WalletService walletService,
+                       PasswordService passwordService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.walletService = walletService;
+        this.passwordService = passwordService;
     }
 
     @Transactional
     public void create(UserRequestDto dto) {
         Role rolePlayer = this.roleRepository.findById(RoleEnum.PLAYER.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Role não encontrada."));
+
+        this.passwordService.validate(dto.password());
+
         User user = new User(dto, passwordEncoder.encode(dto.password()), rolePlayer);
         this.walletService.create(user);
         this.userRepository.save(user);
@@ -64,7 +71,9 @@ public class UserService {
         User user = this.userRepository.getReferenceById(UUID.fromString(userId));
         BeanUtils.copyProperties(dto, user, "password");
 
-        if (dto.password() != null && !dto.password().isEmpty()) {
+        this.passwordService.validate(dto.password());
+
+        if (!dto.password().isEmpty()) {
             user.setPassword(passwordEncoder.encode(dto.password()));
         }
 

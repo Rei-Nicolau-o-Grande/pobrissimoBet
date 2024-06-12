@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestControllerAdvice
 public class ApiGlobalExceptionHandler {
@@ -140,5 +143,22 @@ public class ApiGlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 ex.getRootCause().getMessage());
         return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PasswordInvalidException.class)
+    public ResponseEntity<ApiErrorDto> handlePasswordInvalidException(HttpServletRequest request,
+                                                                      PasswordInvalidException ex) {
+
+        ApiErrorDto apiErrorDto = ApiErrorDto.withPasswordListError(
+                LocalDateTime.now(),
+                request.getRequestURI(),
+                request.getMethod(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "Senha inválida",
+                ex.getErrors()
+        );
+
+        return new ResponseEntity<>(apiErrorDto, HttpStatus.BAD_REQUEST);
     }
 }

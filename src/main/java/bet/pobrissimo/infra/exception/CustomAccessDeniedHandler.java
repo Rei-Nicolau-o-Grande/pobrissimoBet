@@ -40,6 +40,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                 HttpStatus.FORBIDDEN.getReasonPhrase(),
                 "Acesso Negado",
                 null,
+                null,
                 null
         );
 

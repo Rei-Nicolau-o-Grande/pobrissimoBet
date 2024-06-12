@@ -1,11 +1,17 @@
 package bet.pobrissimo.infra.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import java.util.List;
 
-@ResponseStatus(code = HttpStatus.UNPROCESSABLE_ENTITY)
 public class PasswordInvalidException extends RuntimeException {
-    public PasswordInvalidException(String message) {
-        super(message);
+
+    private final List<String> errors;
+
+    public PasswordInvalidException(List<String> errors) {
+        super(String.join(", ", errors));
+        this.errors = errors;
+    }
+
+    public List<String> getErrors() {
+        return errors;
     }
 }

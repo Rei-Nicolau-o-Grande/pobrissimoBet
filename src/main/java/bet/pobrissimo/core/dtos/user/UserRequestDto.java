@@ -11,7 +11,6 @@ public record UserRequestDto(
         @Email(message = "Email inválido")
         String email,
 
-        @NotBlank(message = "Senha é obrigatória")
         String password
     ) {
 }

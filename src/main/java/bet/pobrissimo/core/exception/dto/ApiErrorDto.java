@@ -6,6 +6,7 @@ import org.springframework.validation.BindingResult;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public record ApiErrorDto(
@@ -23,19 +24,22 @@ public record ApiErrorDto(
 
         String message,
 
-        @JsonInclude(JsonInclude.Include.NON_NULL)
+        @JsonInclude(JsonInclude.Include.NON_EMPTY)
         Map<String, String> errorFields,
+
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        List<String> listErrors,
 
         @JsonInclude(JsonInclude.Include.NON_NULL)
         Object stakeTrace
 ) {
     public ApiErrorDto(LocalDateTime timestamp, String path, String method, Integer status, String error,
                        String message) {
-        this(timestamp, path, method, status, error, message, null, null);
+        this(timestamp, path, method, status, error, message, null, null, null);
     }
 
     public ApiErrorDto(LocalDateTime timestamp, String path, String method, Integer status, String error,
-                       String message, Map<String, String> errorFields, Object stakeTrace) {
+                       String message, Map<String, String> errorFields, List<String> listErrors, Object stakeTrace) {
         this.timestamp = timestamp;
         this.path = path;
         this.method = method;
@@ -43,6 +47,7 @@ public record ApiErrorDto(
         this.error = error;
         this.message = message;
         this.errorFields = errorFields != null ? errorFields : new HashMap<>();
+        this.listErrors = listErrors;
         this.stakeTrace = stakeTrace;
     }
 
@@ -50,6 +55,11 @@ public record ApiErrorDto(
         Map<String, String> errorFields = new HashMap<>(this.errorFields);
         result.getFieldErrors().forEach(fieldError ->
                 errorFields.put(fieldError.getField(), fieldError.getDefaultMessage()));
-        return new ApiErrorDto(timestamp, path, method, status, error, message, errorFields, stakeTrace);
+        return new ApiErrorDto(timestamp, path, method, status, error, message, errorFields, listErrors, stakeTrace);
+    }
+
+    public static  ApiErrorDto withPasswordListError(LocalDateTime timestamp, String path, String method, Integer status, String error,
+                                                     String message, List<String> listErrors) {
+        return new ApiErrorDto(timestamp, path, method, status, error, message, null, listErrors, null);
     }
 }
