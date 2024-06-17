@@ -2,8 +2,10 @@ package bet.pobrissimo.core.model;
 
 import bet.pobrissimo.core.enums.TransactionEnum;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -24,6 +26,9 @@ public class Transaction {
 
     @Enumerated(EnumType.STRING)
     private TransactionEnum type;
+
+    @CreationTimestamp
+    private Instant createdAt;
 
     public Transaction(UUID id, BigDecimal value, Wallet wallet, TransactionEnum type) {
         this.id = id;
