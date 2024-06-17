@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/users")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -51,7 +51,7 @@ public class UserController {
                 user.getEmail(),
                 user.getCreatedAt(),
                 user.isActive(),
-                new MyWalletResponseDto(user.getWallet().getAmount()),
+                new MyWalletResponseDto(user.getWallet().getId(), user.getWallet().getAmount()),
                 user.getRoles().stream().map(Role::getName).collect(Collectors.toSet())
         ));
     }

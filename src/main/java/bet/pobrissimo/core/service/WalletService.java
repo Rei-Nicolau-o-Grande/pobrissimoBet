@@ -38,8 +38,9 @@ public class WalletService {
     @Transactional(readOnly = true)
     public MyWalletResponseDto getMyWallet() {
         UUID userId = AuthenticatedCurrentUser.getUserId();
+        Wallet wallet = this.walletRepository.findByUserId(userId);
         BigDecimal amount = this.getAmountByUserId(userId);
-        return new MyWalletResponseDto(amount);
+        return new MyWalletResponseDto(wallet.getId(), amount);
     }
 
     @Transactional(readOnly = true)

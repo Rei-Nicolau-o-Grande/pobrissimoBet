@@ -31,6 +31,6 @@ public class WalletController {
     @PreAuthorize("hasRole('ROLE_Admin')")
     public ResponseEntity<MyWalletResponseDto> findWalletById(@PathVariable("walletId") String walletId) {
         var wallet = this.walletService.findWalletById(walletId);
-        return ResponseEntity.status(HttpStatus.OK).body(new MyWalletResponseDto(wallet.getAmount()));
+        return ResponseEntity.status(HttpStatus.OK).body(new MyWalletResponseDto(wallet.getId(), wallet.getAmount()));
     }
 }

@@ -12,16 +12,17 @@ public class PasswordService {
     public void validate(String password) {
         List<String> fails = new ArrayList<>();
 
-        validateIsBlank(password, fails);
+        validateLengthMin3(password, fails);
 
         if (!fails.isEmpty()) {
             throw new PasswordInvalidException(fails);
         }
     }
 
-    public static void validateIsBlank(String password, List<String> fails) {
-        if (password.isBlank()) {
-            fails.add("A senha não pode ser só de espaços.");
+    public static void validateLengthMin3(String password, List<String> fails) {
+        if (password.length() < 3) {
+            fails.add("A senha deve ter no mínimo 3 caracteres.");
         }
     }
+
 }

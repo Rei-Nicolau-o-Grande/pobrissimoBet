@@ -14,7 +14,6 @@ import bet.pobrissimo.infra.config.AccessControlService;
 import bet.pobrissimo.infra.config.AuthenticatedCurrentUser;
 import bet.pobrissimo.infra.exception.AccessDeniedException;
 import bet.pobrissimo.infra.exception.EntityNotFoundException;
-import bet.pobrissimo.infra.exception.PasswordInvalidException;
 import bet.pobrissimo.infra.util.ValidateConvertStringToUUID;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -71,9 +70,8 @@ public class UserService {
         User user = this.userRepository.getReferenceById(UUID.fromString(userId));
         BeanUtils.copyProperties(dto, user, "password");
 
-        this.passwordService.validate(dto.password());
-
         if (!dto.password().isEmpty()) {
+            this.passwordService.validate(dto.password());
             user.setPassword(passwordEncoder.encode(dto.password()));
         }
 
@@ -123,7 +121,7 @@ public class UserService {
         List<UserResponseDto> userDtos = users.stream()
                 .map(user -> new UserResponseDto(
                         user.getId(), user.getUsername(), user.getEmail(), user.getCreatedAt(),
-                user.isActive(), new MyWalletResponseDto(user.getWallet().getAmount()),
+                user.isActive(), new MyWalletResponseDto(user.getWallet().getId(), user.getWallet().getAmount()),
                         user.getRoles().stream()
                         .map(Role::getName)
                         .collect(Collectors.toSet())))
