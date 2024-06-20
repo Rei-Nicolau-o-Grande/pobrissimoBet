@@ -1,5 +1,6 @@
 package bet.pobrissimo.core.controller.v1;
 
+import bet.pobrissimo.core.controller.DocOpenApi.auth.LoginDocOpenApi;
 import bet.pobrissimo.core.dtos.auth.LoginRequest;
 import bet.pobrissimo.core.dtos.auth.LoginResponse;
 import bet.pobrissimo.core.repository.UserRepository;
@@ -26,6 +27,7 @@ public class TokenController {
         this.tokenService = tokenService;
     }
 
+    @LoginDocOpenApi
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest request) {
         var user = this.userRepository.findByEmail(request.email());
@@ -39,6 +41,5 @@ public class TokenController {
 
         return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(token, jwtClaimsSet.getExpiresAt().toEpochMilli()));
     }
-
 
 }

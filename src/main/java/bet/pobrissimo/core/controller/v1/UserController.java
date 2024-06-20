@@ -1,5 +1,9 @@
 package bet.pobrissimo.core.controller.v1;
 
+import bet.pobrissimo.core.controller.DocOpenApi.user.DeleteDocOpenApi;
+import bet.pobrissimo.core.controller.DocOpenApi.user.FindByIdDocOpenApi;
+import bet.pobrissimo.core.controller.DocOpenApi.user.MeDocOpenApi;
+import bet.pobrissimo.core.controller.DocOpenApi.user.PageableDocOpenApi;
 import bet.pobrissimo.core.dtos.PageableDto;
 import bet.pobrissimo.core.dtos.user.MeResponseDto;
 import bet.pobrissimo.core.dtos.user.UserRequestDto;
@@ -40,6 +44,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
+    @FindByIdDocOpenApi
     @GetMapping("/{userId}")
     @PreAuthorize("hasRole('ROLE_Admin')")
     public ResponseEntity<UserResponseDto> findById(@PathVariable("userId") String userId) {
@@ -56,6 +61,7 @@ public class UserController {
         ));
     }
 
+    @DeleteDocOpenApi
     @DeleteMapping("/{userId}")
     @PreAuthorize("hasRole('ROLE_Admin') or hasRole('ROLE_Player')")
     public ResponseEntity<?> delete(@PathVariable("userId") String userId) {
@@ -63,6 +69,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @PageableDocOpenApi
     @GetMapping("/search")
     @PreAuthorize("hasRole('ROLE_Admin')")
     public ResponseEntity<PageableDto> findAllPageable(
@@ -78,6 +85,7 @@ public class UserController {
         );
     }
 
+    @MeDocOpenApi
     @GetMapping("/me")
     @PreAuthorize("hasRole('ROLE_Player') or hasRole('ROLE_Admin')")
     public ResponseEntity<MeResponseDto> me() {
