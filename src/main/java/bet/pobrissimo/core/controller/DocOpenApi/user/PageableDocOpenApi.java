@@ -18,14 +18,15 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@Operation(summary = "Paginação dos usuários", description = "Recurso de paginação dos usuários")
+@Operation(summary = "Paginação dos usuários", description = "Recurso de paginação dos usuários. " +
+        "Acesso restrito para o **Admin**")
 @Tag(name = "Users")
 @SecurityRequirement(name = "Authorization")
 @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Paginação retornado com sucesso",
                 content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = PageableDto.class))),
-        @ApiResponse(responseCode = "401", description = "Não autorizado",
+        @ApiResponse(responseCode = "401", description = "Token inválido",
                 content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = ApiErrorDto.class))),
         @ApiResponse(responseCode = "403", description = "Acesso negado usuário não é admin",

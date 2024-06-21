@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
         @ApiResponse(responseCode = "200", description = "Usuário retornado com sucesso",
                 content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = MeResponseDto.class))),
-        @ApiResponse(responseCode = "401", description = "Não autorizado",
+        @ApiResponse(responseCode = "401", description = "Token inválido",
                 content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = ApiErrorDto.class))),
         @ApiResponse(responseCode = "403", description = "Admin não pode acessar esse recurso.",

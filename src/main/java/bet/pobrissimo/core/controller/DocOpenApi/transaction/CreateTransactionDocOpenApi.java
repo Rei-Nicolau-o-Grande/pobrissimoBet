@@ -1,6 +1,6 @@
-package bet.pobrissimo.core.controller.DocOpenApi.user;
+package bet.pobrissimo.core.controller.DocOpenApi.transaction;
 
-import bet.pobrissimo.core.dtos.user.UserResponseDto;
+import bet.pobrissimo.core.dtos.transaction.TransactionRequestDto;
 import bet.pobrissimo.core.exception.dto.ApiErrorDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,20 +18,19 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@Operation(summary = "Buscar Usuário pelo Id.", description = "Recurso de buscar o usuário. " +
-        "Acesso restrito para o <b>Admin</b>")
-@Tag(name = "Users")
+@Operation(summary = "Criando Transação.", description = "Recurso para criar a transação.")
+@Tag(name = "Transactions")
 @SecurityRequirement(name = "Authorization")
 @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso",
+        @ApiResponse(responseCode = "201", description = "Transação criado com sucesso",
                 content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = @Schema(implementation = UserResponseDto.class))),
+                        schema = @Schema(implementation = TransactionRequestDto.class))),
         @ApiResponse(responseCode = "401", description = "Token inválido",
                 content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = ApiErrorDto.class))),
-        @ApiResponse(responseCode = "404", description = "Usuário não encontrado",
+        @ApiResponse(responseCode = "404", description = "Carteira não encontrada",
                 content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = ApiErrorDto.class))),
 })
-public @interface FindByIdDocOpenApi {
+public @interface CreateTransactionDocOpenApi {
 }

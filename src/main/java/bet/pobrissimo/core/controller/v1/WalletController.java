@@ -1,5 +1,7 @@
 package bet.pobrissimo.core.controller.v1;
 
+import bet.pobrissimo.core.controller.DocOpenApi.wallet.FindWalletByIdDocOpenApi;
+import bet.pobrissimo.core.controller.DocOpenApi.wallet.GetMyWalletDocOpenApi;
 import bet.pobrissimo.core.dtos.wallet.MyWalletResponseDto;
 import bet.pobrissimo.core.service.WalletService;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ public class WalletController {
         this.walletService = walletService;
     }
 
+    @GetMyWalletDocOpenApi
     @GetMapping("/my-wallet")
     @PreAuthorize("hasRole('ROLE_Player')")
     public ResponseEntity<MyWalletResponseDto> getMyWallet() {
@@ -27,6 +30,7 @@ public class WalletController {
         return ResponseEntity.status(HttpStatus.OK).body(myWallet);
     }
 
+    @FindWalletByIdDocOpenApi
     @GetMapping("/{walletId}")
     @PreAuthorize("hasRole('ROLE_Admin')")
     public ResponseEntity<MyWalletResponseDto> findWalletById(@PathVariable("walletId") String walletId) {

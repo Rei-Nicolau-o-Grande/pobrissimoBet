@@ -41,28 +41,28 @@ public class TesteController {
         return "ok";
     }
 
-    @GetMapping("/add-users/{number}")
-    @PreAuthorize("hasRole('ROLE_Admin')")
-    public ResponseEntity<?> addUsers(@PathVariable("number") int number) {
-
-        var rolePlayer = this.roleRepository.findByName(RoleEnum.PLAYER.getName());
-
-        for (int i = 0; i < number; i++) {
-            var user = new User();
-            user.setUsername(faker.internet().username());
-            user.setEmail(faker.internet().emailAddress());
-            user.setPassword(passwordEncoder.encode(faker.internet().password()));
-            user.setRoles(Set.of(rolePlayer));
-            user.setActive(true);
-            user.setCreatedAt(faker.date().birthday().toInstant());
-
-            Wallet wallet = new Wallet();
-            wallet.setUser(user);
-            wallet.setAmount(BigDecimal.valueOf(faker.number().randomDouble(2, 0, 1000)));
-            user.setWallet(wallet);
-
-            this.userRepository.save(user);
-        }
-        return ResponseEntity.ok().build();
-    }
+//    @GetMapping("/add-users/{number}")
+//    @PreAuthorize("hasRole('ROLE_Admin')")
+//    public ResponseEntity<?> addUsers(@PathVariable("number") int number) {
+//
+//        var rolePlayer = this.roleRepository.findByName(RoleEnum.PLAYER.getName());
+//
+//        for (int i = 0; i < number; i++) {
+//            var user = new User();
+//            user.setUsername(faker.internet().username());
+//            user.setEmail(faker.internet().emailAddress());
+//            user.setPassword(passwordEncoder.encode(faker.internet().password()));
+//            user.setRoles(Set.of(rolePlayer));
+//            user.setActive(true);
+//            user.setCreatedAt(faker.date().birthday().toInstant());
+//
+//            Wallet wallet = new Wallet();
+//            wallet.setUser(user);
+//            wallet.setAmount(BigDecimal.valueOf(faker.number().randomDouble(2, 0, 1000)));
+//            user.setWallet(wallet);
+//
+//            this.userRepository.save(user);
+//        }
+//        return ResponseEntity.ok().build();
+//    }
 }
