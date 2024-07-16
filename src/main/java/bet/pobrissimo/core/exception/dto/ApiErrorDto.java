@@ -5,9 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.validation.BindingResult;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public record ApiErrorDto(
 
@@ -25,7 +23,7 @@ public record ApiErrorDto(
         String message,
 
         @JsonInclude(JsonInclude.Include.NON_EMPTY)
-        Map<String, String> errorFields,
+        Map<String, List<String>> errorFields,
 
         @JsonInclude(JsonInclude.Include.NON_NULL)
         List<String> listErrors,
@@ -39,7 +37,7 @@ public record ApiErrorDto(
     }
 
     public ApiErrorDto(LocalDateTime timestamp, String path, String method, Integer status, String error,
-                       String message, Map<String, String> errorFields, List<String> listErrors, Object stakeTrace) {
+                       String message, Map<String, List<String>> errorFields, List<String> listErrors, Object stakeTrace) {
         this.timestamp = timestamp;
         this.path = path;
         this.method = method;
@@ -52,9 +50,16 @@ public record ApiErrorDto(
     }
 
     public ApiErrorDto addErrorField(BindingResult result) {
-        Map<String, String> errorFields = new HashMap<>(this.errorFields);
-        result.getFieldErrors().forEach(fieldError ->
-                errorFields.put(fieldError.getField(), fieldError.getDefaultMessage()));
+//        Map<String, List<String>> errorFields = new HashMap<>(this.errorFields);
+//        result.getFieldErrors().forEach(fieldError ->
+//                errorFields.put(fieldError.getField(), Collections.singletonList(fieldError.getDefaultMessage())));
+
+        Map<String, List<String>> errorFields = new HashMap<>(this.errorFields);
+        result.getFieldErrors().forEach(fieldError -> {
+            String field = fieldError.getField();
+            String errorMessage = fieldError.getDefaultMessage();
+            errorFields.computeIfAbsent(field, k -> new ArrayList<>()).add(errorMessage);
+        });
         return new ApiErrorDto(timestamp, path, method, status, error, message, errorFields, listErrors, stakeTrace);
     }
 

@@ -145,20 +145,20 @@ public class ApiGlobalExceptionHandler {
         return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(PasswordInvalidException.class)
-    public ResponseEntity<ApiErrorDto> handlePasswordInvalidException(HttpServletRequest request,
-                                                                      PasswordInvalidException ex) {
-
-        ApiErrorDto apiErrorDto = ApiErrorDto.withPasswordListError(
-                LocalDateTime.now(),
-                request.getRequestURI(),
-                request.getMethod(),
-                HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                "Senha inválida",
-                ex.getErrors()
-        );
-
-        return new ResponseEntity<>(apiErrorDto, HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler(PasswordInvalidException.class)
+//    public ResponseEntity<ApiErrorDto> handlePasswordInvalidException(HttpServletRequest request,
+//                                                                      PasswordInvalidException ex) {
+//
+//        ApiErrorDto apiErrorDto = ApiErrorDto.withPasswordListError(
+//                LocalDateTime.now(),
+//                request.getRequestURI(),
+//                request.getMethod(),
+//                HttpStatus.BAD_REQUEST.value(),
+//                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+//                "Senha inválida",
+//                ex.getErrors()
+//        );
+//
+//        return new ResponseEntity<>(apiErrorDto, HttpStatus.BAD_REQUEST);
+//    }
 }
