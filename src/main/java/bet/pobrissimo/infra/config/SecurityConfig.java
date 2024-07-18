@@ -63,6 +63,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET, "/teste/ok").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/v1/token/login").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
+                    .requestMatchers(HttpMethod.GET, VALIDATION_ROUTES).permitAll()
                     .requestMatchers(DOCUMENTATION_OPENAPI).permitAll()
                     .anyRequest().authenticated())
             .csrf(csrf -> csrf.disable())
@@ -128,6 +129,11 @@ public class SecurityConfig {
             "/v3/api-docs/**",
             "/swagger-ui-custom.html", "/swagger-ui.html", "/swagger-ui/**",
             "/**.html", "/webjars/**", "/configuration/**", "/swagger-resources/**"
+    };
+
+    private static final String[] VALIDATION_ROUTES = {
+            "/api/v1/validation/username/**",
+            "/api/v1/validation/email/**"
     };
 
 }
