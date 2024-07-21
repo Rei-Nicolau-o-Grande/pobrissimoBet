@@ -2,6 +2,7 @@ package bet.pobrissimo.core.enums;
 
 import bet.pobrissimo.infra.exception.TransactionTypeDoesNotExistException;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import org.springframework.http.HttpStatus;
 
 public enum TransactionEnum {
     DEPOSIT,
@@ -10,7 +11,12 @@ public enum TransactionEnum {
     @JsonCreator
     public static TransactionEnum fromValue(String value) {
         if (value.isBlank()) {
-            throw new TransactionTypeDoesNotExistException("O tipo de transação não pode ser nulo ou vazio.");
+            throw new TransactionTypeDoesNotExistException(
+                    HttpStatus.BAD_REQUEST,
+                    HttpStatus.BAD_REQUEST.value(),
+                    HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                    "O tipo de transação não pode ser nulo ou vazio."
+            );
         }
 
         for (TransactionEnum type : values()) {
@@ -18,6 +24,11 @@ public enum TransactionEnum {
                 return type;
             }
         }
-        throw new TransactionTypeDoesNotExistException("Opção de transação inválido. " + value);
+        throw new TransactionTypeDoesNotExistException(
+                HttpStatus.BAD_REQUEST,
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "Opção de transação inválido: " + value
+        );
     }
 }

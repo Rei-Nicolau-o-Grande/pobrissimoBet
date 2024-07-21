@@ -1,6 +1,6 @@
 package bet.pobrissimo.core.exception;
 
-import bet.pobrissimo.core.validators.exception.ValidationException;
+import bet.pobrissimo.core.validators.exception.ValidationUserException;
 import bet.pobrissimo.core.exception.dto.ApiErrorDto;
 import bet.pobrissimo.infra.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,75 +42,20 @@ public class ApiGlobalExceptionHandler {
 //    }
 
     @ExceptionHandler({
-            AccessDeniedException.class,
+            ValidationException.class,
     })
-    public ResponseEntity<ApiErrorDto> handlerForbiddenException(HttpServletRequest request,
-                                                                   RuntimeException ex) {
-        return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(new ApiErrorDto(
-                        LocalDateTime.now(),
-                        request.getRequestURI(),
-                        request.getMethod(),
-                        HttpStatus.FORBIDDEN.value(),
-                        HttpStatus.FORBIDDEN.getReasonPhrase(),
-                        ex.getMessage()
-                ));
-    }
+    public ResponseEntity<ApiErrorDto> handlerException(HttpServletRequest request,
+                                                        ValidationException ex) {
 
-    @ExceptionHandler({
-            BadCredentialsException.class,
-    })
-    public ResponseEntity<ApiErrorDto> handlerUnauthorizedException(HttpServletRequest request,
-                                                                     RuntimeException ex) {
         return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
+                .status(ex.getStatus())
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ApiErrorDto(
                         LocalDateTime.now(),
                         request.getRequestURI(),
                         request.getMethod(),
-                        HttpStatus.UNAUTHORIZED.value(),
-                        HttpStatus.UNAUTHORIZED.getReasonPhrase(),
-                        ex.getMessage()
-                ));
-    }
-
-    @ExceptionHandler({
-            InvalidUUIDException.class,
-            EntityNotFoundException.class,
-    })
-    public ResponseEntity<ApiErrorDto> handlerNotFoundException(HttpServletRequest request,
-                                                                RuntimeException ex) {
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(new ApiErrorDto(
-                        LocalDateTime.now(),
-                        request.getRequestURI(),
-                        request.getMethod(),
-                        HttpStatus.NOT_FOUND.value(),
-                        HttpStatus.NOT_FOUND.getReasonPhrase(),
-                        ex.getMessage()
-                ));
-    }
-
-    @ExceptionHandler({
-            TransactionWithDrawException.class,
-            TransactionTypeDoesNotExistException.class,
-    })
-    public ResponseEntity<ApiErrorDto> handlerBadRequestException(HttpServletRequest request,
-                                                                  RuntimeException ex) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(new ApiErrorDto(
-                        LocalDateTime.now(),
-                        request.getRequestURI(),
-                        request.getMethod(),
-                        HttpStatus.BAD_REQUEST.value(),
-                        HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                        ex.getValue(),
+                        ex.getReasonPhrase(),
                         ex.getMessage()
                 ));
     }
@@ -150,10 +95,10 @@ public class ApiGlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-        ValidationException.class
+        ValidationUserException.class
     })
     public ResponseEntity<ApiErrorDto> handleValidationException(HttpServletRequest request,
-                                                                 ValidationException ex) {
+                                                                 ValidationUserException ex) {
         ApiErrorDto apiErrorDto = ApiErrorDto.withErrorFields(
                 LocalDateTime.now(),
                 request.getRequestURI(),

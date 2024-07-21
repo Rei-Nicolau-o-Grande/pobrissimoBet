@@ -1,7 +1,10 @@
 package bet.pobrissimo.infra.exception;
 
-public class InvalidUUIDException extends RuntimeException {
-    public InvalidUUIDException(String message) {
-        super(message);
+import org.springframework.http.HttpStatus;
+
+public class InvalidUUIDException extends ValidationException {
+
+    public InvalidUUIDException(HttpStatus status, Integer value, String reasonPhrase, String message) {
+        super(status, value, reasonPhrase, message);
     }
 }

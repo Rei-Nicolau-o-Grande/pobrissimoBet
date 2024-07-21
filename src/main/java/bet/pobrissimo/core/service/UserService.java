@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +55,12 @@ public class UserService {
     @Transactional
     public void create(UserRequestDto dto) {
         Role rolePlayer = this.roleRepository.findById(RoleEnum.PLAYER.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Role não encontrada."));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        HttpStatus.NOT_FOUND,
+                        HttpStatus.NOT_FOUND.value(),
+                        HttpStatus.NOT_FOUND.getReasonPhrase(),
+                        "Role não encontrada."
+                ));
 
         this.validationUserService.validateUser(dto);
 
@@ -107,12 +113,22 @@ public class UserService {
                     .anyMatch(role -> role.getName().equals(RoleEnum.ADMIN.getName()));
 
             if (isAdmin) {
-                throw new AccessDeniedException("Admin não pode acessar esse recurso.");
+                throw new AccessDeniedException(
+                        HttpStatus.FORBIDDEN,
+                        HttpStatus.FORBIDDEN.value(),
+                        HttpStatus.FORBIDDEN.getReasonPhrase(),
+                        "Admin não pode acessar esse recurso."
+                );
             }
 
             return user;
         } else {
-            throw new EntityNotFoundException("Usuário não encontrado.");
+            throw new EntityNotFoundException(
+                    HttpStatus.NOT_FOUND,
+                    HttpStatus.NOT_FOUND.value(),
+                    HttpStatus.NOT_FOUND.getReasonPhrase(),
+                    "Usuário não encontrado."
+            );
         }
     }
 

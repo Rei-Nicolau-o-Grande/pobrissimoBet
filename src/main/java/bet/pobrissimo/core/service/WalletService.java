@@ -10,6 +10,7 @@ import bet.pobrissimo.infra.config.AuthenticatedCurrentUser;
 import bet.pobrissimo.infra.exception.EntityNotFoundException;
 import bet.pobrissimo.infra.exception.TransactionWithDrawException;
 import bet.pobrissimo.infra.util.ValidateConvertStringToUUID;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,7 +54,12 @@ public class WalletService {
         UUID walletUUID = ValidateConvertStringToUUID.validate(walletId, "Wallet não encontrada.");
 
         return this.walletRepository.findById(walletUUID)
-                .orElseThrow(() -> new EntityNotFoundException("Wallet não encontrada."));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        HttpStatus.NOT_FOUND,
+                        HttpStatus.NOT_FOUND.value(),
+                        HttpStatus.NOT_FOUND.getReasonPhrase(),
+                        "Wallet não encontrada."
+                ));
     }
 
     @Transactional
@@ -69,7 +75,11 @@ public class WalletService {
         var wallet = this.findWalletById(walletId);
         AccessControlService.checkPermission(wallet.getUser().getId().toString());
         if (value.doubleValue() > wallet.getAmount().doubleValue()) {
-            throw new TransactionWithDrawException("Saldo insuficiente.");
+            throw new TransactionWithDrawException(
+                    HttpStatus.BAD_REQUEST,
+                    HttpStatus.BAD_REQUEST.value(),
+                    HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                    "Saldo insuficiente.");
         }
         wallet.setAmount(wallet.getAmount().subtract(value));
         this.walletRepository.save(wallet);

@@ -2,6 +2,7 @@ package bet.pobrissimo.infra.config;
 
 import bet.pobrissimo.core.enums.RoleEnum;
 import bet.pobrissimo.infra.exception.AccessDeniedException;
+import org.springframework.http.HttpStatus;
 
 import java.util.Set;
 import java.util.UUID;
@@ -23,7 +24,12 @@ public class AccessControlService {
 
         if (!currentUserId.equals(targetUserId) &&
                 !currentUserRoles.contains(RoleEnum.ADMIN.getName())) {
-            throw new AccessDeniedException("Acesso Negado");
+            throw new AccessDeniedException(
+                    HttpStatus.FORBIDDEN,
+                    HttpStatus.FORBIDDEN.value(),
+                    HttpStatus.FORBIDDEN.getReasonPhrase(),
+                    "Acesso Negado"
+            );
         }
     }
 }

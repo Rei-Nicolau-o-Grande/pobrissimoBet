@@ -33,7 +33,11 @@ public class TokenController {
         var user = this.userRepository.findByEmail(request.email());
 
         if (user.isEmpty() || !tokenService.validatePassword(request.password(), user.get().getPassword())) {
-            throw new BadCredentialsException("Email ou Senha inválidos");
+            throw new BadCredentialsException(
+                    HttpStatus.UNAUTHORIZED,
+                    HttpStatus.UNAUTHORIZED.value(),
+                    HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+                    "Email ou Senha inválidos");
         }
 
         var jwtClaimsSet = tokenService.createJwtClaimsSet(user.get());

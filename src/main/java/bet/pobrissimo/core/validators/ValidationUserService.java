@@ -1,13 +1,13 @@
 package bet.pobrissimo.core.validators;
 
-import bet.pobrissimo.core.validators.exception.user.EmailInvalidException;
+import bet.pobrissimo.core.validators.exception.user.EmailInvalidUserException;
 import bet.pobrissimo.core.dtos.user.UserRequestDto;
-import bet.pobrissimo.core.validators.exception.ValidationException;
+import bet.pobrissimo.core.validators.exception.ValidationUserException;
 import bet.pobrissimo.core.validators.user.EmailValidationService;
 import bet.pobrissimo.core.validators.user.PasswordValidationService;
 import bet.pobrissimo.core.validators.user.UsernameValidationService;
-import bet.pobrissimo.core.validators.exception.user.PasswordInvalidException;
-import bet.pobrissimo.core.validators.exception.user.UsernameInvalidException;
+import bet.pobrissimo.core.validators.exception.user.PasswordInvalidUserException;
+import bet.pobrissimo.core.validators.exception.user.UsernameInvalidUserException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -34,7 +34,7 @@ public class ValidationUserService {
         usernameValidationService.validate(username, errorFields);
 
         if (!errorFields.isEmpty()) {
-            throw new UsernameInvalidException(errorFields);
+            throw new UsernameInvalidUserException(errorFields);
         }
     }
 
@@ -43,7 +43,7 @@ public class ValidationUserService {
         emailValidationService.validate(email, errorFields);
 
         if (!errorFields.isEmpty()) {
-            throw new EmailInvalidException(errorFields);
+            throw new EmailInvalidUserException(errorFields);
         }
     }
 
@@ -52,7 +52,7 @@ public class ValidationUserService {
         passwordValidationService.validate(password, errorFields);
 
         if (!errorFields.isEmpty()) {
-            throw new PasswordInvalidException(errorFields);
+            throw new PasswordInvalidUserException(errorFields);
         }
     }
 
@@ -64,7 +64,7 @@ public class ValidationUserService {
         passwordValidationService.validate(dto.password(), errorFields);
 
         if (!errorFields.isEmpty()) {
-            throw new ValidationException(errorFields);
+            throw new ValidationUserException(errorFields);
         }
     }
 }
