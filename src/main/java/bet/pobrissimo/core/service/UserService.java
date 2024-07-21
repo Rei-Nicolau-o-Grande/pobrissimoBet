@@ -3,6 +3,7 @@ package bet.pobrissimo.core.service;
 import bet.pobrissimo.core.dtos.user.MeResponseDto;
 import bet.pobrissimo.core.dtos.user.UserRequestDto;
 import bet.pobrissimo.core.dtos.user.UserResponseDto;
+import bet.pobrissimo.core.dtos.validators.ValidationUserService;
 import bet.pobrissimo.core.dtos.wallet.MyWalletResponseDto;
 import bet.pobrissimo.core.enums.RoleEnum;
 import bet.pobrissimo.core.model.Role;
@@ -37,18 +38,18 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final WalletService walletService;
-    private final PasswordService passwordService;
+    private final ValidationUserService validationUserService;
 
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
                        RoleRepository roleRepository,
                        WalletService walletService,
-                       PasswordService passwordService) {
+                       ValidationUserService validationUserService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.walletService = walletService;
-        this.passwordService = passwordService;
+        this.validationUserService = validationUserService;
     }
 
     @Transactional
@@ -56,7 +57,7 @@ public class UserService {
         Role rolePlayer = this.roleRepository.findById(RoleEnum.PLAYER.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Role não encontrada."));
 
-        this.passwordService.validate(dto.password());
+        this.validationUserService.validateUser(dto);
 
         User user = new User(dto, passwordEncoder.encode(dto.password()), rolePlayer);
         this.walletService.create(user);
@@ -65,13 +66,21 @@ public class UserService {
 
     @Transactional
     public void update(String userId, UserRequestDto dto) {
-        this.findById(userId);
+        User user = this.findById(userId);
         AccessControlService.checkPermission(userId);
-        User user = this.userRepository.getReferenceById(UUID.fromString(userId));
-        BeanUtils.copyProperties(dto, user, "password");
+
+        if (!dto.username().isEmpty() && !dto.username().equals(user.getUsername())) {
+            this.validationUserService.validateUsername(dto.username());
+            user.setUsername(dto.username());
+        }
+
+        if (!dto.email().isEmpty() && !dto.email().equals(user.getEmail())) {
+            this.validationUserService.validateEmail(dto.email());
+            user.setEmail(dto.email());
+        }
 
         if (!dto.password().isEmpty()) {
-            this.passwordService.validate(dto.password());
+            this.validationUserService.validatePassword(dto.password());
             user.setPassword(passwordEncoder.encode(dto.password()));
         }
 

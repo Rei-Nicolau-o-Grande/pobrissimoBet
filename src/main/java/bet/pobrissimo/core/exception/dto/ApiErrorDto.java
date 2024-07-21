@@ -50,9 +50,6 @@ public record ApiErrorDto(
     }
 
     public ApiErrorDto addErrorField(BindingResult result) {
-//        Map<String, List<String>> errorFields = new HashMap<>(this.errorFields);
-//        result.getFieldErrors().forEach(fieldError ->
-//                errorFields.put(fieldError.getField(), Collections.singletonList(fieldError.getDefaultMessage())));
 
         Map<String, List<String>> errorFields = new HashMap<>(this.errorFields);
         result.getFieldErrors().forEach(fieldError -> {
@@ -63,8 +60,24 @@ public record ApiErrorDto(
         return new ApiErrorDto(timestamp, path, method, status, error, message, errorFields, listErrors, stakeTrace);
     }
 
-    public static  ApiErrorDto withPasswordListError(LocalDateTime timestamp, String path, String method, Integer status, String error,
-                                                     String message, List<String> listErrors) {
-        return new ApiErrorDto(timestamp, path, method, status, error, message, null, listErrors, null);
+//    public ApiErrorDto addErrorField(BindingResult result) {
+//        Map<String, String> errorFields = new HashMap<>(this.errorFields);
+//        result.getFieldErrors().forEach(fieldError ->
+//                errorFields.put(fieldError.getField(), fieldError.getDefaultMessage()));
+//        return new ApiErrorDto(timestamp, path, method, status, error, message, errorFields, listErrors, stakeTrace);
+//    }
+
+    public static ApiErrorDto withErrorFields(
+        LocalDateTime timestamp,
+        String path,
+        String method,
+        Integer status,
+        String error,
+        String message,
+        Map<String, List<String>> errorFields,
+        List<String> listErrors
+    ) {
+        return new ApiErrorDto(
+            timestamp, path, method, status, error, message, errorFields, listErrors, null);
     }
 }
