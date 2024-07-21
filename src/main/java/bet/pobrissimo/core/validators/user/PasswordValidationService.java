@@ -1,6 +1,6 @@
-package bet.pobrissimo.core.dtos.validators.user;
+package bet.pobrissimo.core.validators.user;
 
-import bet.pobrissimo.core.dtos.validators.ValidationContract;
+import bet.pobrissimo.core.validators.ValidationContract;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

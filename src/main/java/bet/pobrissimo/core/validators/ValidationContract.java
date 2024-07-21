@@ -1,4 +1,4 @@
-package bet.pobrissimo.core.dtos.validators;
+package bet.pobrissimo.core.validators;
 
 import java.util.List;
 import java.util.Map;

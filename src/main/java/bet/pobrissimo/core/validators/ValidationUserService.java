@@ -1,13 +1,13 @@
-package bet.pobrissimo.core.dtos.validators;
+package bet.pobrissimo.core.validators;
 
+import bet.pobrissimo.core.validators.exception.user.EmailInvalidException;
 import bet.pobrissimo.core.dtos.user.UserRequestDto;
-import bet.pobrissimo.core.dtos.validators.exception.ValidationException;
-import bet.pobrissimo.core.dtos.validators.user.EmailValidationService;
-import bet.pobrissimo.core.dtos.validators.user.PasswordValidationService;
-import bet.pobrissimo.core.dtos.validators.user.UsernameValidationService;
-import bet.pobrissimo.core.dtos.validators.exception.user.EmailInvalidException;
-import bet.pobrissimo.core.dtos.validators.exception.user.PasswordInvalidException;
-import bet.pobrissimo.core.dtos.validators.exception.user.UsernameInvalidException;
+import bet.pobrissimo.core.validators.exception.ValidationException;
+import bet.pobrissimo.core.validators.user.EmailValidationService;
+import bet.pobrissimo.core.validators.user.PasswordValidationService;
+import bet.pobrissimo.core.validators.user.UsernameValidationService;
+import bet.pobrissimo.core.validators.exception.user.PasswordInvalidException;
+import bet.pobrissimo.core.validators.exception.user.UsernameInvalidException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

@@ -1,6 +1,6 @@
 package bet.pobrissimo.core.exception;
 
-import bet.pobrissimo.core.dtos.validators.exception.ValidationException;
+import bet.pobrissimo.core.validators.exception.ValidationException;
 import bet.pobrissimo.core.exception.dto.ApiErrorDto;
 import bet.pobrissimo.infra.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
