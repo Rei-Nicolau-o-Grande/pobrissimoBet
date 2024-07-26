@@ -1,6 +1,7 @@
 package bet.pobrissimo.core.service;
 
 import bet.pobrissimo.core.dtos.transaction.TransactionRequestDto;
+import bet.pobrissimo.core.enums.TransactionEnum;
 import bet.pobrissimo.core.model.Transaction;
 import bet.pobrissimo.core.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
@@ -19,28 +20,17 @@ public class TransactionService {
     }
 
     @Transactional
-    public void createTransaction(String walletId, TransactionRequestDto dto) {
-        switch (dto.type()) {
-            case DEPOSIT -> {
-                this.walletService.findWalletById(walletId);
-                this.transactionRepository.save(new Transaction(walletId, dto.value(), dto.type()));
-                this.walletService.deposit(walletId, dto.value());
-            }
-            case WITHDRAW -> {
-                this.walletService.findWalletById(walletId);
-                this.transactionRepository.save(new Transaction(walletId, dto.value(), dto.type()));
-                this.walletService.withdraw(walletId, dto.value());
-            }
-        }
+    public void createTransactionDeposit(String walletId, TransactionRequestDto dto) {
+        this.walletService.findWalletById(walletId);
+        this.transactionRepository.save(new Transaction(walletId, dto.value(), TransactionEnum.DEPOSIT));
+        this.walletService.deposit(walletId, dto.value());
     }
 
-//    @Transactional(readOnly = true)
-//    public void verifyTransaction(String walletId, TransactionRequestDto dto) {
-//        switch (dto.type()) {
-//            case DEPOSIT -> {
-//                this.walletService.findWalletById(walletId);
-//
-//            }
-//        }
-//    }
+    @Transactional
+    public void createTransactionWithDraw(String walletId, TransactionRequestDto dto) {
+        this.walletService.findWalletById(walletId);
+        this.transactionRepository.save(new Transaction(walletId, dto.value(), TransactionEnum.WITHDRAW));
+        this.walletService.withdraw(walletId, dto.value());
+    }
+
 }

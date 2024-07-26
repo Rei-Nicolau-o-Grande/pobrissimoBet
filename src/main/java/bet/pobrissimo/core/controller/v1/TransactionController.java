@@ -20,11 +20,20 @@ public class TransactionController {
     }
 
     @CreateTransactionDocOpenApi
-    @PostMapping("/{walletId}")
+    @PostMapping("/deposit/{walletId}")
     @PreAuthorize("hasRole('Player')")
-    public ResponseEntity<?> createTransaction(@PathVariable("walletId") String walletId,
+    public ResponseEntity<?> createTransactionDeposit(@PathVariable("walletId") String walletId,
                                                @RequestBody @Valid TransactionRequestDto dto) {
-        this.transactionService.createTransaction(walletId, dto);
+        this.transactionService.createTransactionDeposit(walletId, dto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @CreateTransactionDocOpenApi
+    @PostMapping("/withdraw/{walletId}")
+    @PreAuthorize("hasRole('Player')")
+    public ResponseEntity<?> createTransactionWithDraw(@PathVariable("walletId") String walletId,
+                                                      @RequestBody @Valid TransactionRequestDto dto) {
+        this.transactionService.createTransactionWithDraw(walletId, dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
