@@ -17,7 +17,7 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(precision = 19, scale = 4)
+    @Column(precision = 15, scale = 2)
     private BigDecimal value;
 
     @ManyToOne(fetch = FetchType.LAZY)

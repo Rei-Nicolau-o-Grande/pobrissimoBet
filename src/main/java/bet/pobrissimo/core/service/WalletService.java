@@ -62,6 +62,18 @@ public class WalletService {
                 ));
     }
 
+    @Transactional(readOnly = true)
+    protected void validateScaleValue(BigDecimal value) {
+        if (value.precision() > 15 && value.scale() > 2) {
+            throw new TransactionWithDrawException(
+                    HttpStatus.BAD_REQUEST,
+                    HttpStatus.BAD_REQUEST.value(),
+                    HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                    "Valor inválido."
+            );
+        }
+    }
+
     @Transactional
     public void deposit(String walletId, BigDecimal value) {
         var wallet = this.findWalletById(walletId);
@@ -74,6 +86,7 @@ public class WalletService {
     public void withdraw(String walletId, BigDecimal value) {
         var wallet = this.findWalletById(walletId);
         AccessControlService.checkPermission(wallet.getUser().getId().toString());
+        this.validateScaleValue(value);
         if (value.doubleValue() > wallet.getAmount().doubleValue()) {
             throw new TransactionWithDrawException(
                     HttpStatus.BAD_REQUEST,
