@@ -18,19 +18,24 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@Operation(summary = "Criando Transação.", description = "Recurso para criar a transação.")
+@Operation(summary = "Criando Transação do Deposito.", description = "Recurso para criar a transação do deposito.")
 @Tag(name = "Transactions")
 @SecurityRequirement(name = "Authorization")
 @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Transação criado com sucesso",
+        @ApiResponse(responseCode = "201", description = "Transação do deposito criada com sucesso",
                 content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = TransactionRequestDto.class))),
-        @ApiResponse(responseCode = "401", description = "Token inválido",
-                content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = @Schema(implementation = ApiErrorDto.class))),
+
+        @ApiResponse(responseCode = "401", description = "Token Não Autorizado ou Não Encontrado",
+                content = @Content()),
+
         @ApiResponse(responseCode = "404", description = "Carteira não encontrada",
                 content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = ApiErrorDto.class))),
+
+        @ApiResponse(responseCode = "422", description = "O valor da transação não pode ser maior que um milhão '1000000.00'.",
+                content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = @Schema(implementation = ApiErrorDto.class))),
 })
-public @interface CreateTransactionDocOpenApi {
+public @interface CreateDepositTransactionDocOpenApi {
 }

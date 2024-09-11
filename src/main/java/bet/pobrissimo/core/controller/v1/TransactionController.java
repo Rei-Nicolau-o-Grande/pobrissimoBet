@@ -1,6 +1,7 @@
 package bet.pobrissimo.core.controller.v1;
 
-import bet.pobrissimo.core.controller.DocOpenApi.transaction.CreateTransactionDocOpenApi;
+import bet.pobrissimo.core.controller.DocOpenApi.transaction.CreateDepositTransactionDocOpenApi;
+import bet.pobrissimo.core.controller.DocOpenApi.transaction.CreateWithDrawTransactionDocOpenApi;
 import bet.pobrissimo.core.dtos.transaction.TransactionRequestDto;
 import bet.pobrissimo.core.service.TransactionService;
 import jakarta.validation.Valid;
@@ -19,7 +20,7 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    @CreateTransactionDocOpenApi
+    @CreateDepositTransactionDocOpenApi
     @PostMapping("/deposit/{walletId}")
     @PreAuthorize("hasRole('Player')")
     public ResponseEntity<?> createTransactionDeposit(@PathVariable("walletId") String walletId,
@@ -28,7 +29,7 @@ public class TransactionController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @CreateTransactionDocOpenApi
+    @CreateWithDrawTransactionDocOpenApi
     @PostMapping("/withdraw/{walletId}")
     @PreAuthorize("hasRole('Player')")
     public ResponseEntity<?> createTransactionWithDraw(@PathVariable("walletId") String walletId,

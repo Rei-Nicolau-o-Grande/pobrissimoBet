@@ -1,5 +1,7 @@
 package bet.pobrissimo.core.controller.v1;
 
+import bet.pobrissimo.core.controller.DocOpenApi.validation.ValidationUserEmailExistsDocOpenApi;
+import bet.pobrissimo.core.controller.DocOpenApi.validation.ValidationUserUserNameExistsDocOpenApi;
 import bet.pobrissimo.core.repository.UserRepository;
 import bet.pobrissimo.core.validators.ValidationUserService;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ public class ValidationController {
         this.validationUserService = validationUserService;
     }
 
+    @ValidationUserUserNameExistsDocOpenApi
     @GetMapping("/username/{username}")
     public ResponseEntity<?> validateUsername(@PathVariable(value = "username") String username) {
         boolean response = userRepository.existsByUsername(username);
@@ -28,6 +31,7 @@ public class ValidationController {
         return ResponseEntity.ok(response);
     }
 
+    @ValidationUserEmailExistsDocOpenApi
     @GetMapping("/email/{email}")
     public ResponseEntity<?> validateEmail(@PathVariable(value = "email") String email) {
         boolean response = userRepository.existsByEmail(email);

@@ -1,6 +1,5 @@
 package bet.pobrissimo.core.controller.DocOpenApi.user;
 
-import bet.pobrissimo.core.dtos.auth.LoginRequest;
 import bet.pobrissimo.core.exception.dto.ApiErrorDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,6 +23,10 @@ import java.lang.annotation.Target;
 @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Usuário desativado com sucesso",
                 content = @Content()),
+
+        @ApiResponse(responseCode = "401", description = "Token Não Autorizado ou Não Encontrado",
+                content = @Content()),
+
         @ApiResponse(responseCode = "404", description = "Usuário não encontrado",
                 content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = ApiErrorDto.class))),

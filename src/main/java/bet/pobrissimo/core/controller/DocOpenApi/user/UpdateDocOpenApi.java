@@ -1,12 +1,13 @@
-package bet.pobrissimo.core.controller.DocOpenApi.auth;
+package bet.pobrissimo.core.controller.DocOpenApi.user;
 
-import bet.pobrissimo.core.dtos.auth.LoginRequest;
+import bet.pobrissimo.core.dtos.user.UserRequestDto;
 import bet.pobrissimo.core.exception.dto.ApiErrorDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 
@@ -17,17 +18,20 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@Operation(summary = "Login", description = "Recurso do login do usuário")
-@Tag(name = "Token")
+@Operation(summary = "Atualizar Usuário", description = "Recurso para atualizar o usuário")
+@Tag(name = "Users")
+@SecurityRequirement(name = "Authorization")
 @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Login efetuado com sucesso",
+        @ApiResponse(responseCode = "202", description = "Usuário atualizado com sucesso",
                 content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(implementation = LoginRequest.class))),
+                        schema = @Schema(implementation = UserRequestDto.class))),
 
-        @ApiResponse(responseCode = "401", description = "Credenciais inválidas",
+        @ApiResponse(responseCode = "401", description = "Token Não Autorizado ou Não Encontrado",
+                content = @Content()),
+
+        @ApiResponse(responseCode = "404", description = "Usuário não encontrado",
                 content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = ApiErrorDto.class))),
 })
-public @interface LoginDocOpenApi {
-
+public @interface UpdateDocOpenApi {
 }

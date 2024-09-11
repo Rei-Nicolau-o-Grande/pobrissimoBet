@@ -1,6 +1,6 @@
-package bet.pobrissimo.core.controller.DocOpenApi.user;
+package bet.pobrissimo.core.controller.DocOpenApi.transaction;
 
-import bet.pobrissimo.core.dtos.user.MeResponseDto;
+import bet.pobrissimo.core.dtos.transaction.TransactionRequestDto;
 import bet.pobrissimo.core.exception.dto.ApiErrorDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,20 +18,28 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@Operation(summary = "Perfil Usuário Logado", description = "Recurso do usuário logado")
-@Tag(name = "Users")
+@Operation(summary = "Criando Transação para Sacar.", description = "Recurso para criar a transação para sacar.")
+@Tag(name = "Transactions")
 @SecurityRequirement(name = "Authorization")
 @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Usuário retornado com sucesso",
+        @ApiResponse(responseCode = "201", description = "Transação criado para sacar com sucesso",
                 content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = @Schema(implementation = MeResponseDto.class))),
+                        schema = @Schema(implementation = TransactionRequestDto.class))),
+
+        @ApiResponse(responseCode = "400", description = "Saldo insuficiente.",
+                content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = @Schema(implementation = ApiErrorDto.class))),
 
         @ApiResponse(responseCode = "401", description = "Token Não Autorizado ou Não Encontrado",
                 content = @Content()),
 
-        @ApiResponse(responseCode = "403", description = "Admin não pode acessar esse recurso.",
+        @ApiResponse(responseCode = "404", description = "Carteira não encontrada",
+                content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = @Schema(implementation = ApiErrorDto.class))),
+
+        @ApiResponse(responseCode = "422", description = "O valor da transação não pode ser maior que um milhão '1000000.00'.",
                 content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = ApiErrorDto.class))),
 })
-public @interface MeDocOpenApi {
+public @interface CreateWithDrawTransactionDocOpenApi {
 }

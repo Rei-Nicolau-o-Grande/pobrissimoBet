@@ -25,9 +25,9 @@ import java.lang.annotation.Target;
         @ApiResponse(responseCode = "200", description = "Carteira retornada com sucesso",
                 content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = MyWalletResponseDto.class))),
-        @ApiResponse(responseCode = "401", description = "Token inválido",
-                content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = @Schema(implementation = ApiErrorDto.class))),
+
+        @ApiResponse(responseCode = "401", description = "Token Não Autorizado ou Não Encontrado",
+                content = @Content()),
 })
 public @interface GetMyWalletDocOpenApi {
 }

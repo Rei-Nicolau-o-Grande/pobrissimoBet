@@ -1,9 +1,6 @@
 package bet.pobrissimo.core.controller.v1;
 
-import bet.pobrissimo.core.controller.DocOpenApi.user.DeleteDocOpenApi;
-import bet.pobrissimo.core.controller.DocOpenApi.user.FindByIdDocOpenApi;
-import bet.pobrissimo.core.controller.DocOpenApi.user.MeDocOpenApi;
-import bet.pobrissimo.core.controller.DocOpenApi.user.PageableDocOpenApi;
+import bet.pobrissimo.core.controller.DocOpenApi.user.*;
 import bet.pobrissimo.core.dtos.PageableDto;
 import bet.pobrissimo.core.dtos.user.MeResponseDto;
 import bet.pobrissimo.core.dtos.user.UserRequestDto;
@@ -31,12 +28,14 @@ public class UserController {
         this.userService = userService;
     }
 
+    @CreateDocOpenApi
     @PostMapping
     public ResponseEntity<?> create(@RequestBody @Valid UserRequestDto dto) {
         this.userService.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @UpdateDocOpenApi
     @PutMapping("/{userId}")
     @PreAuthorize("hasRole('ROLE_Admin') or hasRole('ROLE_Player')")
     public ResponseEntity<?> update(@PathVariable("userId") String userId, @RequestBody @Valid UserRequestDto dto) {

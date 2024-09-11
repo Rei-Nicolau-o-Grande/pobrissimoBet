@@ -26,9 +26,10 @@ import java.lang.annotation.Target;
         @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso",
                 content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = UserResponseDto.class))),
-        @ApiResponse(responseCode = "401", description = "Token inválido",
-                content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = @Schema(implementation = ApiErrorDto.class))),
+
+        @ApiResponse(responseCode = "401", description = "Token Não Autorizado ou Não Encontrado",
+                content = @Content()),
+
         @ApiResponse(responseCode = "404", description = "Usuário não encontrado",
                 content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = ApiErrorDto.class))),
