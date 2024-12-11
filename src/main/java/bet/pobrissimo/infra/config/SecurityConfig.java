@@ -12,6 +12,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -21,8 +22,6 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -32,23 +31,11 @@ import java.security.interfaces.RSAPublicKey;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Value("${cors.allowed.origins.prod}")
-    private String allowedOriginsProd;
+    private final CorsConfig corsConfig;
 
-    @Value("${cors.allowed.origins.test}")
-    private String allowedOriginsTest;
-
-    @Value("${cors.allowed.origins.dev}")
-    private String allowedOriginsDev;
-
-    @Value("${cors.allowed.mapping}")
-    private String allowedMapping;
-
-    @Value("${cors.allowed.methods}")
-    private String[] allowedMethods;
-
-    @Value("${cors.allowed.headers}")
-    private String[] allowedHeaders;
+    public SecurityConfig(CorsConfig corsConfig) {
+        this.corsConfig = corsConfig;
+    }
 
     @Value("${jwt.public.key}")
     private RSAPublicKey publicKey;
@@ -66,7 +53,8 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET, VALIDATION_ROUTES).permitAll()
                     .requestMatchers(DOCUMENTATION_OPENAPI).permitAll()
                     .anyRequest().authenticated())
-            .csrf(csrf -> csrf.disable())
+            .csrf(AbstractHttpConfigurer::disable)
+            .cors(cors -> cors.configurationSource(corsConfig))
             .oauth2ResourceServer(
                     oauth2 -> oauth2.jwt(jwt -> jwt
                             .jwtAuthenticationConverter(jwtMyAuthenticationConverter())))
@@ -105,20 +93,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry
-                        .addMapping(allowedMapping)
-                        .allowedOrigins(allowedOriginsDev)
-                        .allowedMethods(allowedMethods)
-                        .allowedHeaders(allowedHeaders);
-            }
-        };
-    }
-
-    @Bean
     public BCryptPasswordEncoder passwordEncoder () {
         return new BCryptPasswordEncoder();
     }
@@ -127,6 +101,7 @@ public class SecurityConfig {
             "/docs/index.html",
             "/docs-park.html", "/docs-park/**",
             "/v3/api-docs/**",
+            "/swagger-ui-configuration/**",
             "/swagger-ui-user.html", "/swagger-ui.html", "/swagger-ui/**",
             "/**.html", "/webjars/**", "/configuration/**", "/swagger-resources/**",
             "/docs/**",
