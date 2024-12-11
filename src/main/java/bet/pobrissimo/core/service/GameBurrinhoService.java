@@ -1,0 +1,183 @@
+package bet.pobrissimo.core.service;
+
+import bet.pobrissimo.core.dtos.transaction.TransactionRequestDto;
+import org.apache.commons.math3.random.MersenneTwister;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class GameBurrinhoService {
+
+    private static final String[] SYMBOLS = {"🍒", "🍋", "🔔", "💎", "🍀", "🫏", "💩", "🐒", "🥩", "🍺", "🚀", "🗿", "🖕"};
+    private static final int REEL_COUNT = 5;
+    private static final int ROW_COUNT = 3;
+
+    private final MersenneTwister random = new MersenneTwister();
+    private final WalletService walletService;
+    private final TransactionService transactionService;
+
+    public GameBurrinhoService(WalletService walletService,
+                           TransactionService transactionService) {
+        this.walletService = walletService;
+        this.transactionService = transactionService;
+    }
+
+    /**
+     * Gera uma matriz de símbolos para o jogo.
+     */
+    public List<List<String>> generateSymbols() {
+        List<List<String>> reels = new ArrayList<>();
+
+        for (int i = 0; i < REEL_COUNT; i++) {
+            List<String> column = new ArrayList<>();
+            for (int j = 0; j < ROW_COUNT; j++) {
+                column.add(SYMBOLS[random.nextInt(SYMBOLS.length)]);
+            }
+            reels.add(column);
+        }
+        return reels;
+    }
+
+    /**
+     * Verifica os ganhos com base nos símbolos gerados.
+     *
+     * @param reels Matriz de símbolos gerados
+     */
+    public long checkWin(List<List<String>> reels) {
+        long win = 0;
+
+        // Verificar linhas horizontais
+        win += checkHorizontalWins(reels);
+
+        // Verificar colunas verticais
+        win += checkVerticalWins(reels);
+
+        // Verificar diagonais
+        win += checkDiagonalWins(reels);
+
+        return win;
+    }
+
+    /**
+     * Verifica as combinações vencedoras nas linhas.
+     *
+     * @param reels Matriz de símbolos gerados
+     */
+    private long checkHorizontalWins(List<List<String>> reels) {
+        long win = 0;
+
+        // Itera pelas 3 linhas (0, 1, 2)
+        for (int row = 0; row < ROW_COUNT; row++) {
+            // Verifica todas as combinações de 3 símbolos consecutivos
+            for (int startCol = 0; startCol <= REEL_COUNT - 3; startCol++) {
+                String firstSymbol = reels.get(startCol).get(row);
+
+                // Verifica se os próximos dois símbolos são iguais ao primeiro
+                if (reels.get(startCol + 1).get(row).equals(firstSymbol) &&
+                        reels.get(startCol + 2).get(row).equals(firstSymbol)) {
+                    win++;
+                    break; // Não contar múltiplas vitórias na mesma linha
+                }
+            }
+        }
+
+        return win;
+    }
+
+    /**
+     * Verifica as combinações vencedoras nas colunas.
+     *
+     * @param reels Matriz de símbolos gerados
+     */
+    private long checkVerticalWins(List<List<String>> reels) {
+        long win = 0;
+
+        for (int col = 0; col < REEL_COUNT; col++) {
+            // Verifica se todos os símbolos da coluna são iguais
+            String firstSymbol = reels.get(col).get(0);
+            if (reels.get(col).get(1).equals(firstSymbol) &&
+                    reels.get(col).get(2).equals(firstSymbol)) {
+                win++;
+            }
+        }
+
+        return win;
+    }
+
+    /**
+     * Verifica as combinações vencedoras nas diagonais.
+     *
+     * @param reels Matriz de símbolos gerados
+     */
+    private long checkDiagonalWins(List<List<String>> reels) {
+        long win = 0;
+
+        // Verificar diagonais principais (↘)
+        for (int startCol = 0; startCol <= REEL_COUNT - 3; startCol++) {
+            for (int row = 0; row <= ROW_COUNT - 3; row++) {
+                String firstSymbol = reels.get(startCol).get(row);
+                if (reels.get(startCol + 1).get(row + 1).equals(firstSymbol) &&
+                        reels.get(startCol + 2).get(row + 2).equals(firstSymbol)) {
+                    win++;
+                }
+            }
+        }
+
+        // Verificar diagonais secundárias (↙)
+        for (int startCol = 0; startCol <= REEL_COUNT - 3; startCol++) {
+            for (int row = ROW_COUNT - 1; row >= 2; row--) {
+                String firstSymbol = reels.get(startCol).get(row);
+                if (reels.get(startCol + 1).get(row - 1).equals(firstSymbol) &&
+                        reels.get(startCol + 2).get(row - 2).equals(firstSymbol)) {
+                    win++;
+                }
+            }
+        }
+
+        return win;
+    }
+
+    /**
+     * Realiza a transação com base no resultado.
+     *
+     * @param amountBet Valor da aposta
+     * @param win Quantidade de vitórias
+     */
+    private void processTransaction(BigDecimal amountBet, long win) {
+        var myWallet = walletService.getMyWallet();
+        if (win > 0) {
+            transactionService.createTransactionDeposit(
+                    myWallet.id().toString(),
+                    new TransactionRequestDto(amountBet.multiply(BigDecimal.valueOf(win))));
+        } else {
+            transactionService.createTransactionWithDraw(
+                    myWallet.id().toString(),
+                    new TransactionRequestDto(amountBet));
+        }
+    }
+
+    /**
+     * Executa o jogo e processa o resultado.
+     *
+     * @param amountBet Valor da aposta
+     */
+    public GameResult execute(BigDecimal amountBet) {
+        List<List<String>> reels = generateSymbols();
+        long win = checkWin(reels);
+        processTransaction(amountBet, win);
+        return new GameResult(reels, win);
+    }
+
+    /**
+     * Representa o resultado de um jogo.
+     *
+     * @param reels Matriz de símbolos gerados
+     * @param win Quantidade de vitórias
+     */
+    public record GameResult(List<List<String>> reels, long win) {
+    }
+    
+}

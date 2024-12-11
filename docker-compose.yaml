@@ -5,7 +5,7 @@ services:
     restart: always
     container_name: db_probissimo_bet
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_DB=${DB_NAME}
@@ -29,7 +29,7 @@ services:
     container_name: redis_probissimo_bet
     restart: always
     ports:
-      - 6379:6379
+      - "6379:6379"
     networks:
       - rede_probissimo_bet
 
@@ -43,7 +43,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: 123
     ports:
-      - 5050:5050
+      - "5050:5050"
     networks:
       - rede_probissimo_bet
 
@@ -60,7 +60,7 @@ services:
     env_file:
       - .env
     ports:
-      - 8080:8080
+      - "8080:8080"
     networks:
       - rede_probissimo_bet
 

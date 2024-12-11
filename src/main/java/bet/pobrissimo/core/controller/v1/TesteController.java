@@ -22,7 +22,7 @@ import java.util.Set;
 @RequestMapping("/teste")
 public class TesteController {
 
-    private final Faker faker = new Faker(Locale.of("pt-BR"));
+    private final Faker faker = new Faker(Locale.forLanguageTag("pt-BR"));
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;

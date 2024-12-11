@@ -128,7 +128,8 @@ public class SecurityConfig {
             "/docs-park.html", "/docs-park/**",
             "/v3/api-docs/**",
             "/swagger-ui-user.html", "/swagger-ui.html", "/swagger-ui/**",
-            "/**.html", "/webjars/**", "/configuration/**", "/swagger-resources/**"
+            "/**.html", "/webjars/**", "/configuration/**", "/swagger-resources/**",
+            "/docs/**",
     };
 
     private static final String[] VALIDATION_ROUTES = {
