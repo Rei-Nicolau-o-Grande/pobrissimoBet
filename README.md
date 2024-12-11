@@ -18,6 +18,11 @@ Crie o application.properties e copiando o application.properties.example
 cp application.properties.example application.properties
 ```
 
+Criando Schemas e Roles
+```bash
+cp data.sql.example data.sql
+```
+
 
 # Crie a chaves privada e publica
 
