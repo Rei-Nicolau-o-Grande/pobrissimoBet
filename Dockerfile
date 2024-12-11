@@ -1,4 +1,4 @@
-FROM amazoncorretto:21
+FROM amazoncorretto:21-alpine
 WORKDIR /app
 COPY target/ProbissimoBet.jar .
 EXPOSE 8080
