@@ -21,14 +21,12 @@ public class TransactionService {
 
     @Transactional
     public void createTransactionDeposit(String walletId, TransactionRequestDto dto) {
-//        this.walletService.findWalletById(walletId);
         this.walletService.deposit(walletId, dto.value());
         this.transactionRepository.save(new Transaction(walletId, dto.value(), TransactionEnum.DEPOSIT));
     }
 
     @Transactional
     public void createTransactionWithDraw(String walletId, TransactionRequestDto dto) {
-//        this.walletService.findWalletById(walletId);
         this.walletService.withdraw(walletId, dto.value());
         this.transactionRepository.save(new Transaction(walletId, dto.value(), TransactionEnum.WITHDRAW));
     }

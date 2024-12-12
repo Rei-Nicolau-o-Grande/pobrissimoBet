@@ -62,7 +62,7 @@ public class UserService {
                         "Role não encontrada."
                 ));
 
-        this.validationUserService.validateUser(dto);
+        this.validationUserService.validateUserForCreate(dto);
 
         User user = new User(dto, passwordEncoder.encode(dto.password()), rolePlayer);
         this.walletService.create(user);
@@ -74,20 +74,7 @@ public class UserService {
         User user = this.findById(userId);
         AccessControlService.checkPermission(userId);
 
-        if (!dto.username().isEmpty() && !dto.username().equals(user.getUsername())) {
-            this.validationUserService.validateUsername(dto.username());
-            user.setUsername(dto.username());
-        }
-
-        if (!dto.email().isEmpty() && !dto.email().equals(user.getEmail())) {
-            this.validationUserService.validateEmail(dto.email());
-            user.setEmail(dto.email());
-        }
-
-        if (!dto.password().isEmpty()) {
-            this.validationUserService.validatePassword(dto.password());
-            user.setPassword(passwordEncoder.encode(dto.password()));
-        }
+        this.validationUserService.validateUserForUpdate(dto, user);
 
         this.userRepository.save(user);
     }
@@ -144,8 +131,12 @@ public class UserService {
     private Page<UserResponseDto> getUserResponseDtos(Pageable pageable, Page<User> users) {
         List<UserResponseDto> userDtos = users.stream()
                 .map(user -> new UserResponseDto(
-                        user.getId(), user.getUsername(), user.getEmail(), user.getCreatedAt(),
-                user.isActive(), new MyWalletResponseDto(user.getWallet().getId(), user.getWallet().getAmount()),
+                        user.getId(),
+                        user.getUsername(),
+                        user.getEmail(),
+                        user.getCreatedAt(),
+                        user.isActive(),
+                        new MyWalletResponseDto(user.getWallet().getId(), user.getWallet().getAmount()),
                         user.getRoles().stream()
                         .map(Role::getName)
                         .collect(Collectors.toSet())))
