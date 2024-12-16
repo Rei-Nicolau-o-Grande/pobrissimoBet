@@ -6,7 +6,7 @@ import java.util.List;
 public record BurrinhoResponse(
         List<List<String>> reels,
         String nameGame,
-        Long bet,
+        Long multiplier,
         Boolean win,
         BigDecimal balance
 ) {

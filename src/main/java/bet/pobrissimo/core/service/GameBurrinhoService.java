@@ -1,7 +1,9 @@
 package bet.pobrissimo.core.service;
 
 import bet.pobrissimo.core.dtos.transaction.TransactionRequestDto;
+import bet.pobrissimo.infra.exception.CheckingBalanceUserPlayerException;
 import org.apache.commons.math3.random.MersenneTwister;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -11,7 +13,8 @@ import java.util.List;
 @Service
 public class GameBurrinhoService {
 
-    private static final String[] SYMBOLS = {"🍒", "🍋", "🔔", "💎", "🍀", "🫏", "💩", "🐒", "🥩", "🍺", "🚀", "🗿", "🖕"};
+    private static final String[] SYMBOLS = {"🍒", "🍋", "🔔", "💎", "🍀", "🫏", "💩", "🐒", "🥩", "🍺", "🚀", "🗿",
+            "🖕", "🦄", "🦧", "🦦" ,"❤️"};
     private static final int REEL_COUNT = 5;
     private static final int ROW_COUNT = 3;
 
@@ -45,6 +48,7 @@ public class GameBurrinhoService {
      * Verifica os ganhos com base nos símbolos gerados.
      *
      * @param reels Matriz de símbolos gerados
+     * @return Quantidade de vitórias
      */
     public long checkWin(List<List<String>> reels) {
         long win = 0;
@@ -65,6 +69,7 @@ public class GameBurrinhoService {
      * Verifica as combinações vencedoras nas linhas.
      *
      * @param reels Matriz de símbolos gerados
+     * @return Quantidade de vitórias
      */
     private long checkHorizontalWins(List<List<String>> reels) {
         long win = 0;
@@ -91,6 +96,7 @@ public class GameBurrinhoService {
      * Verifica as combinações vencedoras nas colunas.
      *
      * @param reels Matriz de símbolos gerados
+     * @return Quantidade de vitórias
      */
     private long checkVerticalWins(List<List<String>> reels) {
         long win = 0;
@@ -111,6 +117,7 @@ public class GameBurrinhoService {
      * Verifica as combinações vencedoras nas diagonais.
      *
      * @param reels Matriz de símbolos gerados
+     * @return Quantidade de vitórias
      */
     private long checkDiagonalWins(List<List<String>> reels) {
         long win = 0;
@@ -160,11 +167,30 @@ public class GameBurrinhoService {
     }
 
     /**
+     * Verifcar se o jogador tem saldo suficiente para realizar a aposta.
+     */
+    public void checkingBalanceUserPlayer(BigDecimal amountBet) {
+        boolean checkBalance = walletService.getMyWallet().amount().compareTo(amountBet) >= 0;
+
+        if (!checkBalance) {
+            throw new CheckingBalanceUserPlayerException(
+                    HttpStatus.BAD_REQUEST,
+                    HttpStatus.BAD_REQUEST.value(),
+                    HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                    "Saldo insuficiente para realizar a aposta."
+            );
+        }
+    }
+
+    /**
      * Executa o jogo e processa o resultado.
      *
      * @param amountBet Valor da aposta
      */
     public GameResult execute(BigDecimal amountBet) {
+
+        checkingBalanceUserPlayer(amountBet);
+
         List<List<String>> reels = generateSymbols();
         long win = checkWin(reels);
         processTransaction(amountBet, win);
