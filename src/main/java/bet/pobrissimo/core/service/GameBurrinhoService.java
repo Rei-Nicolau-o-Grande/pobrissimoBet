@@ -6,7 +6,6 @@ import bet.pobrissimo.infra.exception.CheckingBalanceUserPlayerException;
 import org.apache.commons.math3.random.MersenneTwister;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -58,18 +57,18 @@ public class GameBurrinhoService {
      * @return Quantidade de vitórias
      */
     public long checkWin(List<List<String>> reels) {
-        long win = 0;
+        long multiplier = 0;
 
         // Verificar linhas horizontais
-        win += checkHorizontalWins(reels);
+        multiplier += checkHorizontalWins(reels);
 
         // Verificar colunas verticais
-        win += checkVerticalWins(reels);
+        multiplier += checkVerticalWins(reels);
 
         // Verificar diagonais
-        win += checkDiagonalWins(reels);
+        multiplier += checkDiagonalWins(reels);
 
-        return win;
+        return multiplier;
     }
 
     /**
@@ -79,7 +78,7 @@ public class GameBurrinhoService {
      * @return Quantidade de vitórias
      */
     private long checkHorizontalWins(List<List<String>> reels) {
-        long win = 0;
+        long multiplier = 0;
 
         // Itera pelas 3 linhas (0, 1, 2)
         for (int row = 0; row < ROW_COUNT; row++) {
@@ -90,13 +89,13 @@ public class GameBurrinhoService {
                 // Verifica se os próximos dois símbolos são iguais ao primeiro
                 if (reels.get(startCol + 1).get(row).equals(firstSymbol) &&
                         reels.get(startCol + 2).get(row).equals(firstSymbol)) {
-                    win++;
+                    multiplier++;
                     break; // Não contar múltiplas vitórias na mesma linha
                 }
             }
         }
 
-        return win;
+        return multiplier;
     }
 
     /**
@@ -106,18 +105,18 @@ public class GameBurrinhoService {
      * @return Quantidade de vitórias
      */
     private long checkVerticalWins(List<List<String>> reels) {
-        long win = 0;
+        long multiplier = 0;
 
         for (int col = 0; col < REEL_COUNT; col++) {
             // Verifica se todos os símbolos da coluna são iguais
             String firstSymbol = reels.get(col).get(0);
             if (reels.get(col).get(1).equals(firstSymbol) &&
                     reels.get(col).get(2).equals(firstSymbol)) {
-                win++;
+                multiplier++;
             }
         }
 
-        return win;
+        return multiplier;
     }
 
     /**
@@ -127,7 +126,7 @@ public class GameBurrinhoService {
      * @return Quantidade de vitórias
      */
     private long checkDiagonalWins(List<List<String>> reels) {
-        long win = 0;
+        long multiplier = 0;
 
         // Verificar diagonais principais (↘)
         for (int startCol = 0; startCol <= REEL_COUNT - 3; startCol++) {
@@ -135,7 +134,7 @@ public class GameBurrinhoService {
                 String firstSymbol = reels.get(startCol).get(row);
                 if (reels.get(startCol + 1).get(row + 1).equals(firstSymbol) &&
                         reels.get(startCol + 2).get(row + 2).equals(firstSymbol)) {
-                    win++;
+                    multiplier++;
                 }
             }
         }
@@ -146,27 +145,26 @@ public class GameBurrinhoService {
                 String firstSymbol = reels.get(startCol).get(row);
                 if (reels.get(startCol + 1).get(row - 1).equals(firstSymbol) &&
                         reels.get(startCol + 2).get(row - 2).equals(firstSymbol)) {
-                    win++;
+                    multiplier++;
                 }
             }
         }
 
-        return win;
+        return multiplier;
     }
 
     /**
      * Realiza a transação com base no resultado.
      *
      * @param amountBet Valor da aposta
-     * @param win Quantidade de vitórias
+     * @param multiplier Quantidade de vitórias
      */
-    @Transactional
-    public TransactionResponseDto processTransaction(BigDecimal amountBet, long win) {
+    public TransactionResponseDto processTransaction(BigDecimal amountBet, long multiplier) {
         var myWallet = walletService.getMyWallet();
-        if (win > 0) {
+        if (multiplier > 0) {
             return transactionService.createTransactionDeposit(
                     myWallet.id().toString(),
-                    new TransactionRequestDto(amountBet.multiply(BigDecimal.valueOf(win))));
+                    new TransactionRequestDto(amountBet.multiply(BigDecimal.valueOf(multiplier))));
         } else {
             return transactionService.createTransactionWithDraw(
                     myWallet.id().toString(),
@@ -201,6 +199,7 @@ public class GameBurrinhoService {
      * Executa o jogo e processa o resultado.
      *
      * @param amountBet Valor da aposta
+     * @return Resultado do jogo
      */
     public GameResult execute(BigDecimal amountBet) {
 
