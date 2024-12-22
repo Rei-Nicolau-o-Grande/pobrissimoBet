@@ -79,17 +79,24 @@ public class Transaction {
         this.type = type;
     }
 
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Transaction that = (Transaction) o;
-        return Objects.equals(id, that.id) && Objects.equals(value, that.value) && Objects.equals(wallet, that.wallet) && type == that.type;
+        return Objects.equals(id, that.id) && Objects.equals(value, that.value) && Objects.equals(wallet, that.wallet) && type == that.type && Objects.equals(createdAt, that.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, value, wallet, type);
+        return Objects.hash(id, value, wallet, type, createdAt);
     }
 
     @Override
@@ -99,6 +106,7 @@ public class Transaction {
                 ", value=" + value +
                 ", wallet=" + wallet +
                 ", type=" + type +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }

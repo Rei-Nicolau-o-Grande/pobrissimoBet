@@ -1,6 +1,7 @@
 package bet.pobrissimo.core.service;
 
 import bet.pobrissimo.core.dtos.transaction.TransactionRequestDto;
+import bet.pobrissimo.core.dtos.transaction.TransactionResponseDto;
 import bet.pobrissimo.core.enums.TransactionEnum;
 import bet.pobrissimo.core.model.Transaction;
 import bet.pobrissimo.core.repository.TransactionRepository;
@@ -20,15 +21,33 @@ public class TransactionService {
     }
 
     @Transactional
-    public void createTransactionDeposit(String walletId, TransactionRequestDto dto) {
+    public TransactionResponseDto createTransactionDeposit(String walletId, TransactionRequestDto dto) {
         this.walletService.deposit(walletId, dto.value());
-        this.transactionRepository.save(new Transaction(walletId, dto.value(), TransactionEnum.DEPOSIT));
+        Transaction transaction = this.transactionRepository.save(
+                new Transaction(walletId, dto.value(), TransactionEnum.DEPOSIT));
+
+        return new TransactionResponseDto(
+                transaction.getId(),
+                transaction.getValue(),
+                transaction.getType().name(),
+                transaction.getCreatedAt(),
+                transaction.getWallet().toMyWalletResponseDto()
+        );
     }
 
     @Transactional
-    public void createTransactionWithDraw(String walletId, TransactionRequestDto dto) {
+    public TransactionResponseDto createTransactionWithDraw(String walletId, TransactionRequestDto dto) {
         this.walletService.withdraw(walletId, dto.value());
-        this.transactionRepository.save(new Transaction(walletId, dto.value(), TransactionEnum.WITHDRAW));
+        Transaction transaction = this.transactionRepository.save(
+                new Transaction(walletId, dto.value(), TransactionEnum.WITHDRAW));
+
+        return new TransactionResponseDto(
+                transaction.getId(),
+                transaction.getValue(),
+                transaction.getType().name(),
+                transaction.getCreatedAt(),
+                transaction.getWallet().toMyWalletResponseDto()
+        );
     }
 
 }

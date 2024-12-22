@@ -40,8 +40,8 @@ public class GameController {
             new BurrinhoResponse(
                 result.reels(),
                 BURRINHO.getName(),
-                result.win(),
-                result.win() > 0,
+                result.multiplier(),
+                result.multiplier() > 0,
                 walletService.getMyWallet().amount()
             )
         );

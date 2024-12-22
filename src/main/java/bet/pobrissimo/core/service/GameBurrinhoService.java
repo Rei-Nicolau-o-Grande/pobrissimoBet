@@ -1,14 +1,18 @@
 package bet.pobrissimo.core.service;
 
 import bet.pobrissimo.core.dtos.transaction.TransactionRequestDto;
+import bet.pobrissimo.core.dtos.transaction.TransactionResponseDto;
 import bet.pobrissimo.infra.exception.CheckingBalanceUserPlayerException;
 import org.apache.commons.math3.random.MersenneTwister;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import static bet.pobrissimo.core.enums.GameNames.BURRINHO;
 
 @Service
 public class GameBurrinhoService {
@@ -21,11 +25,14 @@ public class GameBurrinhoService {
     private final MersenneTwister random = new MersenneTwister();
     private final WalletService walletService;
     private final TransactionService transactionService;
+    private final TicketService ticketService;
 
     public GameBurrinhoService(WalletService walletService,
-                           TransactionService transactionService) {
+                           TransactionService transactionService,
+                           TicketService ticketService) {
         this.walletService = walletService;
         this.transactionService = transactionService;
+        this.ticketService = ticketService;
     }
 
     /**
@@ -153,17 +160,25 @@ public class GameBurrinhoService {
      * @param amountBet Valor da aposta
      * @param win Quantidade de vitórias
      */
-    private void processTransaction(BigDecimal amountBet, long win) {
+    @Transactional
+    public TransactionResponseDto processTransaction(BigDecimal amountBet, long win) {
         var myWallet = walletService.getMyWallet();
         if (win > 0) {
-            transactionService.createTransactionDeposit(
+            return transactionService.createTransactionDeposit(
                     myWallet.id().toString(),
                     new TransactionRequestDto(amountBet.multiply(BigDecimal.valueOf(win))));
         } else {
-            transactionService.createTransactionWithDraw(
+            return transactionService.createTransactionWithDraw(
                     myWallet.id().toString(),
                     new TransactionRequestDto(amountBet));
         }
+    }
+
+    /**
+     * Cria um ticket com base no resultado.
+     */
+    private void createTicket(TransactionResponseDto processTransaction, long multiplier) {
+        ticketService.createTicket(processTransaction, BURRINHO, multiplier);
     }
 
     /**
@@ -192,18 +207,19 @@ public class GameBurrinhoService {
         checkingBalanceUserPlayer(amountBet);
 
         List<List<String>> reels = generateSymbols();
-        long win = checkWin(reels);
-        processTransaction(amountBet, win);
-        return new GameResult(reels, win);
+        long multiplier = checkWin(reels);
+        TransactionResponseDto processTransaction = processTransaction(amountBet, multiplier);
+        createTicket(processTransaction, multiplier);
+        return new GameResult(reels, multiplier);
     }
 
     /**
      * Representa o resultado de um jogo.
      *
      * @param reels Matriz de símbolos gerados
-     * @param win Quantidade de vitórias
+     * @param multiplier Quantidade de vitórias
      */
-    public record GameResult(List<List<String>> reels, long win) {
+    public record GameResult(List<List<String>> reels, long multiplier) {
     }
     
 }

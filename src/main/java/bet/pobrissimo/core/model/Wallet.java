@@ -1,5 +1,6 @@
 package bet.pobrissimo.core.model;
 
+import bet.pobrissimo.core.dtos.wallet.MyWalletResponseDto;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -93,5 +94,9 @@ public class Wallet {
                 ", user=" + user +
                 ", transactions=" + transactions +
                 '}';
+    }
+
+    public MyWalletResponseDto toMyWalletResponseDto() {
+        return new MyWalletResponseDto(id, amount);
     }
 }
