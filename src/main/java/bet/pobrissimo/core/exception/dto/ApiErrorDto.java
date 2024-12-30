@@ -60,13 +60,6 @@ public record ApiErrorDto(
         return new ApiErrorDto(timestamp, path, method, status, error, message, errorFields, listErrors, stakeTrace);
     }
 
-//    public ApiErrorDto addErrorField(BindingResult result) {
-//        Map<String, String> errorFields = new HashMap<>(this.errorFields);
-//        result.getFieldErrors().forEach(fieldError ->
-//                errorFields.put(fieldError.getField(), fieldError.getDefaultMessage()));
-//        return new ApiErrorDto(timestamp, path, method, status, error, message, errorFields, listErrors, stakeTrace);
-//    }
-
     public static ApiErrorDto withErrorFields(
         LocalDateTime timestamp,
         String path,

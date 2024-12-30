@@ -27,7 +27,14 @@ public class AuthenticatedCurrentUser {
     }
 
     public static Set<String> getUserRoles() {
-        List<String> rolesList = (List<String>) extractClaim().get("roles");
-        return new HashSet<>(rolesList);
+        Object roles = extractClaim().get("roles");
+        if (roles instanceof List<?> rawList) {
+            List<String> rolesList = rawList.stream()
+                    .filter(String.class::isInstance)
+                    .map(String.class::cast)
+                    .toList();
+            return new HashSet<>(rolesList);
+        }
+        return Collections.emptySet();
     }
 }

@@ -1,22 +1,17 @@
 package bet.pobrissimo.core.controller.v1;
 
-import bet.pobrissimo.core.enums.RoleEnum;
-import bet.pobrissimo.core.model.User;
-import bet.pobrissimo.core.model.Wallet;
 import bet.pobrissimo.core.repository.RoleRepository;
 import bet.pobrissimo.core.repository.UserRepository;
 import net.datafaker.Faker;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Locale;
-import java.util.Set;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/teste")
@@ -36,9 +31,11 @@ public class TesteController {
         this.roleRepository = roleRepository;
     }
 
-    @GetMapping("/ok")
-    public String teste() {
-        return "ok";
+    @GetMapping("/deploy")
+    public ResponseEntity<Map<String, String>> teste() {
+        return ResponseEntity.ok(new HashMap<>() {{
+            put("message", "Sua API está funcionando!");
+        }});
     }
 
 //    @GetMapping("/add-users/{number}")

@@ -47,7 +47,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authorize -> authorize
-                    .requestMatchers(HttpMethod.GET, "/teste/ok").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/teste/deploy").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/v1/token/login").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
                     .requestMatchers(HttpMethod.GET, VALIDATION_ROUTES).permitAll()
