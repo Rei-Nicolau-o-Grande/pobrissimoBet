@@ -72,10 +72,6 @@ SHOW_SQL=true
 FORMAT_SQL=true
 DDL_AUTO=update
 
-# Redis
-REDIS_HOST=SEU_HOST
-REDIS_PORT=PORTA_REDIS
-
 # JWT
 JWT_PUBLIC_KEY=classpath:public.pem
 JWT_PRIVATE_KEY=classpath:private.pem
@@ -107,10 +103,9 @@ CORS_ALLOWED_HEADERS=*
 
 ## Rodando localmente com docker compose
 
-Mude o host do postgres e redis
+Mude o host do postgres
 ```bash
 DB_HOST=db # postgres
-REDIS_HOST=redis # redis
 ```
 Criando o .jar
 ```bash
