@@ -13,9 +13,9 @@ Entre em resources
   cd src/main/resources 
 ```
 
-Crie o application.properties e copiando o application.properties.example
+Crie o application.yaml e copiando o application.yaml.example
 ```bash
-cp application.properties.example application.properties
+cp application.yaml.example application.yaml
 ```
 
 Criando Schemas e Roles
