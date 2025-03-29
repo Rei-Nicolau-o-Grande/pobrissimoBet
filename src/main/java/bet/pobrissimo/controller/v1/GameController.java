@@ -2,8 +2,10 @@ package bet.pobrissimo.controller.v1;
 
 import bet.pobrissimo.controller.DocOpenApi.game.DocGameBurrinho;
 import bet.pobrissimo.dtos.game.burrinho.BurrinhoResponse;
+import bet.pobrissimo.dtos.game.burrinho.RodaRodaPicanhaResponse;
 import bet.pobrissimo.dtos.transaction.TransactionRequestDto;
 import bet.pobrissimo.service.GameBurrinhoService;
+import bet.pobrissimo.service.GameRodaRodaPicanhaService;
 import bet.pobrissimo.service.WalletService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -14,18 +16,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static bet.pobrissimo.enums.GameNames.BURRINHO;
+import static bet.pobrissimo.enums.GameNames.*;
 
 @RestController
 @RequestMapping("api/v1/game")
 public class GameController {
 
     private final GameBurrinhoService gameBurrinhoService;
+    private final GameRodaRodaPicanhaService gameRoletaPicanhaService;
     private final WalletService walletService;
 
     public GameController(GameBurrinhoService gameBurrinhoService,
+                          GameRodaRodaPicanhaService gameRoletaPicanhaService,
                           WalletService walletService) {
         this.gameBurrinhoService = gameBurrinhoService;
+        this.gameRoletaPicanhaService = gameRoletaPicanhaService;
         this.walletService = walletService;
     }
 
@@ -33,11 +38,26 @@ public class GameController {
     @PreAuthorize("hasRole('ROLE_Player')")
     @DocGameBurrinho
     public ResponseEntity<BurrinhoResponse> playBurrinho(@RequestBody @Valid TransactionRequestDto request) {
-        var result = gameBurrinhoService.execute(request.value());
+        GameBurrinhoService.GameResultBurrinho result = gameBurrinhoService.execute(request.value());
         return ResponseEntity.status(HttpStatus.CREATED).body(
             new BurrinhoResponse(
                 result.reels(),
                 BURRINHO.getName(),
+                result.multiplier(),
+                result.multiplier() > 0,
+                walletService.getMyWallet().amount()
+            )
+        );
+    }
+
+    @PostMapping("/roda-roda-picanha")
+    @PreAuthorize("hasRole('ROLE_Player')")
+    public ResponseEntity<RodaRodaPicanhaResponse> playRodaRodaPicanha(@RequestBody @Valid TransactionRequestDto request) {
+        GameRodaRodaPicanhaService.GameResultRodaRodaPicanha result = gameRoletaPicanhaService.execute(request.value());
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+            new RodaRodaPicanhaResponse(
+                result.roulette(),
+                RODA_RODA_PICANHA.getName(),
                 result.multiplier(),
                 result.multiplier() > 0,
                 walletService.getMyWallet().amount()

@@ -217,7 +217,7 @@ public class GameBurrinhoService {
      * @param amountBet Valor da aposta
      * @return Resultado do jogo
      */
-    public GameResult execute(BigDecimal amountBet) {
+    public GameResultBurrinho execute(BigDecimal amountBet) {
 
         checkingBalanceUserPlayer(amountBet);
 
@@ -225,7 +225,7 @@ public class GameBurrinhoService {
         long multiplier = checkWin(reels);
         TransactionResponseDto processTransaction = processTransaction(amountBet, multiplier);
         createTicket(processTransaction, multiplier);
-        return new GameResult(reels, multiplier);
+        return new GameResultBurrinho(reels, multiplier);
     }
 
     /**
@@ -234,7 +234,7 @@ public class GameBurrinhoService {
      * @param reels Matriz de símbolos gerados
      * @param multiplier Quantidade de vitórias
      */
-    public record GameResult(List<List<String>> reels, long multiplier) {
+    public record GameResultBurrinho(List<List<String>> reels, long multiplier) {
 
     }
     
