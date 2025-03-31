@@ -2,7 +2,7 @@ package bet.pobrissimo.enums;
 
 public enum GameNames {
 
-    BURRINHO("Burrinho"),
+    BURRINHO_FORTUNE("Burrinho Fortune"),
     RODA_RODA_PICANHA("Roda Roda Picanha");
 
     private final String name;

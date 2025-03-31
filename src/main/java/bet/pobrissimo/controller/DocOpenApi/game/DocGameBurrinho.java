@@ -1,6 +1,6 @@
 package bet.pobrissimo.controller.DocOpenApi.game;
 
-import bet.pobrissimo.dtos.game.burrinho.BurrinhoResponse;
+import bet.pobrissimo.dtos.game.burrinho.BurrinhoFortuneResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Response da Rodada do Jogo Burrinho",
                 content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = @Schema(implementation = BurrinhoResponse.class))),
+                        schema = @Schema(implementation = BurrinhoFortuneResponse.class))),
 
         @ApiResponse(responseCode = "401", description = "Token Não Autorizado ou Não Encontrado",
                 content = @Content()),

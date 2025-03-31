@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static bet.pobrissimo.enums.GameNames.BURRINHO;
+import static bet.pobrissimo.enums.GameNames.BURRINHO_FORTUNE;
 
 @Service
 public class GameBurrinhoService {
@@ -192,7 +192,7 @@ public class GameBurrinhoService {
      * Cria um ticket com base no resultado.
      */
     private void createTicket(TransactionResponseDto processTransaction, long multiplier) {
-        ticketService.createTicket(processTransaction, BURRINHO, multiplier);
+        ticketService.createTicket(processTransaction, BURRINHO_FORTUNE, multiplier);
     }
 
     /**
@@ -217,7 +217,7 @@ public class GameBurrinhoService {
      * @param amountBet Valor da aposta
      * @return Resultado do jogo
      */
-    public GameResultBurrinho execute(BigDecimal amountBet) {
+    public GameResultBurrinhoFortune execute(BigDecimal amountBet) {
 
         checkingBalanceUserPlayer(amountBet);
 
@@ -225,7 +225,7 @@ public class GameBurrinhoService {
         long multiplier = checkWin(reels);
         TransactionResponseDto processTransaction = processTransaction(amountBet, multiplier);
         createTicket(processTransaction, multiplier);
-        return new GameResultBurrinho(reels, multiplier);
+        return new GameResultBurrinhoFortune(reels, multiplier);
     }
 
     /**
@@ -234,7 +234,7 @@ public class GameBurrinhoService {
      * @param reels Matriz de símbolos gerados
      * @param multiplier Quantidade de vitórias
      */
-    public record GameResultBurrinho(List<List<String>> reels, long multiplier) {
+    public record GameResultBurrinhoFortune(List<List<String>> reels, long multiplier) {
 
     }
     
