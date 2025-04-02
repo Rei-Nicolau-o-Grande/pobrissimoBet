@@ -1,11 +1,19 @@
 package bet.pobrissimo.service;
 
+import bet.pobrissimo.dtos.transaction.TransactionRequestDto;
+import bet.pobrissimo.dtos.transaction.TransactionResponseDto;
+import bet.pobrissimo.dtos.wallet.MyWalletResponseDto;
+import bet.pobrissimo.enums.GameNames;
+import bet.pobrissimo.exception.exceptions.CheckingBalanceUserPlayerException;
 import org.apache.commons.math3.random.MersenneTwister;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import static bet.pobrissimo.enums.GameNames.RODA_RODA_PICANHA;
 
 @Service
 public class GameRodaRodaPicanhaService {
@@ -55,10 +63,47 @@ public class GameRodaRodaPicanhaService {
         return win;
     }
 
+    private TransactionResponseDto processTransaction(BigDecimal amountBet, long multiplier) {
+        MyWalletResponseDto myWallet = walletService.getMyWallet();
+        if ( multiplier > 0 ) {
+            return transactionService.createTransactionDeposit(
+                    myWallet.id().toString(),
+                    new TransactionRequestDto(amountBet.multiply(BigDecimal.valueOf(multiplier)))
+            );
+        } else {
+            return transactionService.createTransactionWithDraw(
+                    myWallet.id().toString(),
+                    new TransactionRequestDto(amountBet));
+        }
+    }
+
+    private void createTicket(TransactionResponseDto processTransaction, long multiplier) {
+        ticketService.createTicket(processTransaction, RODA_RODA_PICANHA, multiplier);
+    }
+
+    private void checkingBalanceUserPlayer(BigDecimal amountBet) {
+        boolean checkBalance = walletService.getMyWallet().amount().compareTo(amountBet) > 0;
+
+        if (!checkBalance) {
+            throw new CheckingBalanceUserPlayerException(
+                    HttpStatus.BAD_REQUEST,
+                    HttpStatus.BAD_REQUEST.value(),
+                    HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                    "Saldo insuficiente para realizar a aposta."
+            );
+        }
+    }
+
     public GameResultRodaRodaPicanha execute(BigDecimal amountBet) {
+
+        checkingBalanceUserPlayer(amountBet);
 
         List<String> wheel = spinWheel();
         long multiplier = checkWin(wheel);
+
+        TransactionResponseDto processTransaction = processTransaction(amountBet, multiplier);
+        createTicket(processTransaction, multiplier);
+
         return new GameResultRodaRodaPicanha(wheel, multiplier);
     }
 

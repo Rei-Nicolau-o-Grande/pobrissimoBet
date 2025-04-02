@@ -2,6 +2,7 @@ package bet.pobrissimo.service;
 
 import bet.pobrissimo.dtos.transaction.TransactionRequestDto;
 import bet.pobrissimo.dtos.transaction.TransactionResponseDto;
+import bet.pobrissimo.dtos.wallet.MyWalletResponseDto;
 import bet.pobrissimo.exception.exceptions.CheckingBalanceUserPlayerException;
 import org.apache.commons.math3.random.MersenneTwister;
 import org.springframework.http.HttpStatus;
@@ -176,7 +177,7 @@ public class GameBurrinhoService {
      * @param multiplier Quantidade de vitórias
      */
     public TransactionResponseDto processTransaction(BigDecimal amountBet, long multiplier) {
-        var myWallet = walletService.getMyWallet();
+        MyWalletResponseDto myWallet = walletService.getMyWallet();
         if (multiplier > 0) {
             return transactionService.createTransactionDeposit(
                     myWallet.id().toString(),
