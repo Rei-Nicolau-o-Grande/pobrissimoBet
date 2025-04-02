@@ -1,4 +1,4 @@
-package bet.pobrissimo.dtos.game.burrinho;
+package bet.pobrissimo.dtos.game;
 
 import java.math.BigDecimal;
 import java.util.List;

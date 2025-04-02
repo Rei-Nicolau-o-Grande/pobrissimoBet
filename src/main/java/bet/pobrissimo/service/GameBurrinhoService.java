@@ -1,5 +1,6 @@
 package bet.pobrissimo.service;
 
+import bet.pobrissimo.dtos.game.GameResultBurrinhoFortune;
 import bet.pobrissimo.dtos.transaction.TransactionRequestDto;
 import bet.pobrissimo.dtos.transaction.TransactionResponseDto;
 import bet.pobrissimo.dtos.wallet.MyWalletResponseDto;
@@ -227,16 +228,6 @@ public class GameBurrinhoService {
         TransactionResponseDto processTransaction = processTransaction(amountBet, multiplier);
         createTicket(processTransaction, multiplier);
         return new GameResultBurrinhoFortune(reels, multiplier);
-    }
-
-    /**
-     * Representa o resultado de um jogo.
-     *
-     * @param reels Matriz de símbolos gerados
-     * @param multiplier Quantidade de vitórias
-     */
-    public record GameResultBurrinhoFortune(List<List<String>> reels, long multiplier) {
-
     }
     
 }

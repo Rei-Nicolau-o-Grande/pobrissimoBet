@@ -1,5 +1,6 @@
 package bet.pobrissimo.service;
 
+import bet.pobrissimo.dtos.game.GameResultRodaRodaPicanha;
 import bet.pobrissimo.dtos.transaction.TransactionRequestDto;
 import bet.pobrissimo.dtos.transaction.TransactionResponseDto;
 import bet.pobrissimo.dtos.wallet.MyWalletResponseDto;
@@ -107,5 +108,4 @@ public class GameRodaRodaPicanhaService {
         return new GameResultRodaRodaPicanha(wheel, multiplier);
     }
 
-    public record GameResultRodaRodaPicanha(List<String> roulette, long multiplier) {}
 }

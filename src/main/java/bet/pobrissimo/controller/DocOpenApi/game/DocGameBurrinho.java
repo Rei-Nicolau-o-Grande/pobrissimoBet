@@ -1,6 +1,6 @@
 package bet.pobrissimo.controller.DocOpenApi.game;
 
-import bet.pobrissimo.dtos.game.burrinho.BurrinhoFortuneResponse;
+import bet.pobrissimo.dtos.game.BurrinhoFortuneResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

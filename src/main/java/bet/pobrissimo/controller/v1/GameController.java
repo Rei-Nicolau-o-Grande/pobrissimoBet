@@ -1,8 +1,10 @@
 package bet.pobrissimo.controller.v1;
 
 import bet.pobrissimo.controller.DocOpenApi.game.DocGameBurrinho;
-import bet.pobrissimo.dtos.game.burrinho.BurrinhoFortuneResponse;
-import bet.pobrissimo.dtos.game.burrinho.RodaRodaPicanhaResponse;
+import bet.pobrissimo.dtos.game.BurrinhoFortuneResponse;
+import bet.pobrissimo.dtos.game.GameResultBurrinhoFortune;
+import bet.pobrissimo.dtos.game.GameResultRodaRodaPicanha;
+import bet.pobrissimo.dtos.game.RodaRodaPicanhaResponse;
 import bet.pobrissimo.dtos.transaction.TransactionRequestDto;
 import bet.pobrissimo.service.GameBurrinhoService;
 import bet.pobrissimo.service.GameRodaRodaPicanhaService;
@@ -38,7 +40,7 @@ public class GameController {
     @PreAuthorize("hasRole('ROLE_Player')")
     @DocGameBurrinho
     public ResponseEntity<BurrinhoFortuneResponse> playBurrinho(@RequestBody @Valid TransactionRequestDto request) {
-        GameBurrinhoService.GameResultBurrinhoFortune result = gameBurrinhoService.execute(request.value());
+        GameResultBurrinhoFortune result = gameBurrinhoService.execute(request.value());
         return ResponseEntity.status(HttpStatus.CREATED).body(
             new BurrinhoFortuneResponse(
                 result.reels(),
@@ -53,7 +55,7 @@ public class GameController {
     @PostMapping("/roda-roda-picanha")
     @PreAuthorize("hasRole('ROLE_Player')")
     public ResponseEntity<RodaRodaPicanhaResponse> playRodaRodaPicanha(@RequestBody @Valid TransactionRequestDto request) {
-        GameRodaRodaPicanhaService.GameResultRodaRodaPicanha result = gameRoletaPicanhaService.execute(request.value());
+        GameResultRodaRodaPicanha result = gameRoletaPicanhaService.execute(request.value());
         return ResponseEntity.status(HttpStatus.CREATED).body(
             new RodaRodaPicanhaResponse(
                 result.roulette(),
