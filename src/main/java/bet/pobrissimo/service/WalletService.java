@@ -1,6 +1,7 @@
 package bet.pobrissimo.service;
 
 import bet.pobrissimo.dtos.wallet.MyWalletResponseDto;
+import bet.pobrissimo.exception.exceptions.WalletUserNotFound;
 import bet.pobrissimo.model.User;
 import bet.pobrissimo.model.Wallet;
 import bet.pobrissimo.repository.TransactionRepository;
@@ -39,7 +40,13 @@ public class WalletService {
     @Transactional(readOnly = true)
     public MyWalletResponseDto getMyWallet() {
         UUID userId = AuthenticatedCurrentUser.getUserId();
-        Wallet wallet = this.walletRepository.findByUserId(userId);
+        Wallet wallet = this.walletRepository.findByUserId(userId).orElseThrow(
+                () -> new WalletUserNotFound(
+                        HttpStatus.NOT_FOUND,
+                        HttpStatus.NOT_FOUND.value(),
+                        HttpStatus.NOT_FOUND.getReasonPhrase(),
+                        "Wallet do usuário logado não encontrada."
+                ));
         BigDecimal amount = this.getAmountByUserId(userId);
         return new MyWalletResponseDto(wallet.getId(), amount);
     }

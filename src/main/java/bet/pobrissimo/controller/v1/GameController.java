@@ -37,7 +37,7 @@ public class GameController {
         this.walletService = walletService;
     }
 
-    @PostMapping("/burrinho")
+    @PostMapping("/burrinho-fortune")
     @PreAuthorize("hasRole('ROLE_Player')")
     @DocGameBurrinhoFortune
     public ResponseEntity<BurrinhoFortuneResponse> playBurrinho(@RequestBody @Valid TransactionRequestDto request) {

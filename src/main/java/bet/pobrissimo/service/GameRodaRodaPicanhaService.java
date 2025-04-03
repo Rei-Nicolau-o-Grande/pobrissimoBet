@@ -4,7 +4,6 @@ import bet.pobrissimo.dtos.game.GameResultRodaRodaPicanha;
 import bet.pobrissimo.dtos.transaction.TransactionRequestDto;
 import bet.pobrissimo.dtos.transaction.TransactionResponseDto;
 import bet.pobrissimo.dtos.wallet.MyWalletResponseDto;
-import bet.pobrissimo.enums.GameNames;
 import bet.pobrissimo.exception.exceptions.CheckingBalanceUserPlayerException;
 import org.apache.commons.math3.random.MersenneTwister;
 import org.springframework.http.HttpStatus;
