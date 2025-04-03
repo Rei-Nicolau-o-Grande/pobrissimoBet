@@ -17,16 +17,15 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@Operation(summary = "Acesso o jogo do burrinho", description = "Recurso do jogo do Burrinho")
+@Operation(summary = "Acesso o jogo do Burrinho Fortune", description = "Recurso do jogo do Burrinho Fortune")
 @Tag(name = "Games")
 @SecurityRequirement(name = "Authorization")
 @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Response da Rodada do Jogo Burrinho",
+        @ApiResponse(responseCode = "201", description = "Response da Rodada do Jogo Burrinho Fortune",
                 content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = BurrinhoFortuneResponse.class))),
 
         @ApiResponse(responseCode = "401", description = "Token Não Autorizado ou Não Encontrado",
                 content = @Content()),
 })
-public @interface DocGameBurrinho {
-}
+public @interface DocGameBurrinhoFortune {}

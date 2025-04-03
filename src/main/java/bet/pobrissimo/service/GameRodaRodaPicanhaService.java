@@ -38,6 +38,10 @@ public class GameRodaRodaPicanhaService {
         this.ticketService = ticketService;
     }
 
+    /**
+     * Gera um Array de símbolos para o jogo.
+     * @return Array de símbolos
+     */
     public List<String> spinWheel() {
         List<String> wheel = new ArrayList<>();
         int picanhaIndex = random.nextInt(SIZE_WHEEL);
@@ -52,6 +56,12 @@ public class GameRodaRodaPicanhaService {
         return wheel;
     }
 
+    /**
+     * Verifica os ganhos com base nos símbolos gerados.
+     *
+     * @param wheel Array de símbolos gerados.
+     * @return Quantidade de vitórais
+     */
     public Long checkWin(List<String> wheel) {
         long win = 0;
 
@@ -64,6 +74,12 @@ public class GameRodaRodaPicanhaService {
         return win;
     }
 
+    /**
+     * Realiza a transação com base no resultado.
+     *
+     * @param amountBet Valor da aposta
+     * @param multiplier Quantidade de vitórias
+     */
     private TransactionResponseDto processTransaction(BigDecimal amountBet, long multiplier) {
         MyWalletResponseDto myWallet = walletService.getMyWallet();
         if ( multiplier > 0 ) {
@@ -78,12 +94,18 @@ public class GameRodaRodaPicanhaService {
         }
     }
 
+    /**
+     * Cria um ticket com base no resultado.
+     */
     private void createTicket(TransactionResponseDto processTransaction, long multiplier) {
         ticketService.createTicket(processTransaction, RODA_RODA_PICANHA, multiplier);
     }
 
+    /**
+     * Verifcar se o jogador tem saldo suficiente para realizar a aposta.
+     */
     private void checkingBalanceUserPlayer(BigDecimal amountBet) {
-        boolean checkBalance = walletService.getMyWallet().amount().compareTo(amountBet) > 0;
+        boolean checkBalance = walletService.getMyWallet().amount().compareTo(amountBet) >= 0;
 
         if (!checkBalance) {
             throw new CheckingBalanceUserPlayerException(
@@ -95,6 +117,12 @@ public class GameRodaRodaPicanhaService {
         }
     }
 
+    /**
+     * Executa o jogo e processa o resultado.
+     *
+     * @param amountBet Valor da aposta
+     * @return Resultado do jogo
+     */
     public GameResultRodaRodaPicanha execute(BigDecimal amountBet) {
 
         checkingBalanceUserPlayer(amountBet);

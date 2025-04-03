@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public record RodaRodaPicanhaResponse(
-        List<String> roulette,
+        List<String> wheel,
         String nameGame,
         Long multiplier,
         Boolean win,
