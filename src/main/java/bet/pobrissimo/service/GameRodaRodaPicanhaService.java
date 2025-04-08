@@ -10,17 +10,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static bet.pobrissimo.enums.GameNames.RODA_RODA_PICANHA;
 
 @Service
 public class GameRodaRodaPicanhaService {
 
-    private static final String[] SYMBOLS = {"🥩", "🫏", "💩"};
+    private static final String[] SYMBOLS = {"🥩", "🍳", "💩"};
 
-    private static final int SIZE_WHEEL = 11;
+    private static final int SIZE_WHEEL = 15;
 
     private final MersenneTwister random = new MersenneTwister();
 
@@ -42,16 +41,29 @@ public class GameRodaRodaPicanhaService {
      * @return Array de símbolos
      */
     public List<String> spinWheel() {
-        List<String> wheel = new ArrayList<>();
-        int picanhaIndex = random.nextInt(SIZE_WHEEL);
+        List<String> wheel = new ArrayList<>(Collections.nCopies(SIZE_WHEEL, ""));
 
-        for (int i = 0; i < SIZE_WHEEL; i++) {
-            if (i == picanhaIndex) {
-                wheel.add("🥩");
-            } else {
-                wheel.add(SYMBOLS[random.nextInt(SYMBOLS.length - 1) + 1]);
+        int picanhaIndex = random.nextInt(SIZE_WHEEL);
+        wheel.set(picanhaIndex, "🥩");
+
+        Set<Integer> burrinhoIndexes = new HashSet<>();
+        while (burrinhoIndexes.size() < 2) {
+            int index = random.nextInt(SIZE_WHEEL);
+            if (index != picanhaIndex) {
+                burrinhoIndexes.add(index);
             }
         }
+
+        for (int index : burrinhoIndexes) {
+            wheel.set(index, "🍳");
+        }
+
+        for (int i = 0; i < SIZE_WHEEL; i++) {
+            if (wheel.get(i).isEmpty()) {
+                wheel.set(i, "💩");
+            }
+        }
+
         return wheel;
     }
 
@@ -65,8 +77,12 @@ public class GameRodaRodaPicanhaService {
         long win = 0;
 
         for (int i = 0; i < wheel.size(); i++) {
-            if (wheel.get(5).equals("🥩")) {
-                win = 1;
+            int INDEX_WIN = 7;
+            if (wheel.get(INDEX_WIN).equals("🥩")) {
+                win += 10;
+                break;
+            } else if (wheel.get(INDEX_WIN).equals("🍳")) {
+                win += 2;
                 break;
             }
         }
