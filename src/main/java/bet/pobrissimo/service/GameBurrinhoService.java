@@ -12,14 +12,28 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static bet.pobrissimo.enums.GameNames.BURRINHO_FORTUNE;
 
 @Service
 public class GameBurrinhoService {
 
-    // Símbolos do jogo
-    private static final String[] SYMBOLS = {"🍒", "🍋", "🔔", "💎", "🍀", "🫏", "💩", "🐒", "🥩", "🖕", "❤️"};
+    // Símbolos do jogo e pontuação
+    private static final Map<String, Integer> SYMBOL_MULTIPLIERS = Map.ofEntries(
+            Map.entry("🫏", 10),
+            Map.entry("🥩", 5),
+            Map.entry("❤️", 5),
+            Map.entry("🍒", 3),
+            Map.entry("🍋", 1),
+            Map.entry("🔔", 1),
+            Map.entry("💎", 1),
+            Map.entry("🍀", 1),
+            Map.entry("🖕", 1),
+            Map.entry("🐒", 1),
+            Map.entry("💩", 1)
+    );
+
 
     // colunas da matriz (5)
     private static final int REEL_COUNT = 5;
@@ -52,6 +66,7 @@ public class GameBurrinhoService {
 
         // Matriz de símbolos
         List<List<String>> reels = new ArrayList<>();
+        List<String> emojis = new ArrayList<>(SYMBOL_MULTIPLIERS.keySet());
 
         // Gera 5 colunas com 3 símbolos cada
         for (int i = 0; i < REEL_COUNT; i++) {
@@ -60,7 +75,7 @@ public class GameBurrinhoService {
 
             for (int j = 0; j < ROW_COUNT; j++) {
                 // Adiciona um símbolo aleatório à coluna
-                column.add(SYMBOLS[random.nextInt(SYMBOLS.length)]);
+                column.add(emojis.get(random.nextInt(emojis.size())));
             }
             // Adiciona a coluna à matriz
             reels.add(column);
@@ -107,7 +122,7 @@ public class GameBurrinhoService {
                 // Verifica se os próximos dois símbolos são iguais ao primeiro
                 if (reels.get(startCol + 1).get(row).equals(firstSymbol) &&
                         reels.get(startCol + 2).get(row).equals(firstSymbol)) {
-                    multiplier++;
+                    multiplier = tablePunctuation(firstSymbol);
                     break; // Não contar múltiplas vitórias na mesma linha
                 }
             }
@@ -130,7 +145,7 @@ public class GameBurrinhoService {
             String firstSymbol = reels.get(col).get(0);
             if (reels.get(col).get(1).equals(firstSymbol) &&
                     reels.get(col).get(2).equals(firstSymbol)) {
-                multiplier++;
+                multiplier = tablePunctuation(firstSymbol);
             }
         }
 
@@ -152,7 +167,7 @@ public class GameBurrinhoService {
                 String firstSymbol = reels.get(startCol).get(row);
                 if (reels.get(startCol + 1).get(row + 1).equals(firstSymbol) &&
                         reels.get(startCol + 2).get(row + 2).equals(firstSymbol)) {
-                    multiplier++;
+                    multiplier = tablePunctuation(firstSymbol);
                 }
             }
         }
@@ -163,12 +178,23 @@ public class GameBurrinhoService {
                 String firstSymbol = reels.get(startCol).get(row);
                 if (reels.get(startCol + 1).get(row - 1).equals(firstSymbol) &&
                         reels.get(startCol + 2).get(row - 2).equals(firstSymbol)) {
-                    multiplier++;
+
+                    multiplier = tablePunctuation(firstSymbol);
                 }
             }
         }
 
         return multiplier;
+    }
+
+    /**
+     * Tabela de pontuação
+     *
+     * @param symbol recebe o símbolo
+     * @return retorna o multiplicador das linhas de vitorias.
+     */
+    public long tablePunctuation(String symbol) {
+        return SYMBOL_MULTIPLIERS.getOrDefault(symbol, 0);
     }
 
     /**
