@@ -63,21 +63,15 @@ public class GameBurrinhoService {
      * @return Matriz de símbolos
      */
     public List<List<String>> generateSymbols() {
-
-        // Matriz de símbolos
         List<List<String>> reels = new ArrayList<>();
         List<String> emojis = new ArrayList<>(SYMBOL_MULTIPLIERS.keySet());
 
-        // Gera 5 colunas com 3 símbolos cada
         for (int i = 0; i < REEL_COUNT; i++) {
-            // Cria uma nova coluna
             List<String> column = new ArrayList<>();
 
             for (int j = 0; j < ROW_COUNT; j++) {
-                // Adiciona um símbolo aleatório à coluna
                 column.add(emojis.get(random.nextInt(emojis.size())));
             }
-            // Adiciona a coluna à matriz
             reels.add(column);
         }
         return reels;
@@ -92,13 +86,10 @@ public class GameBurrinhoService {
     public long checkWin(List<List<String>> reels) {
         long multiplier = 0;
 
-        // Verificar linhas horizontais
         multiplier += checkHorizontalWins(reels);
 
-        // Verificar colunas verticais
         multiplier += checkVerticalWins(reels);
 
-        // Verificar diagonais
         multiplier += checkDiagonalWins(reels);
 
         return multiplier;
@@ -113,17 +104,14 @@ public class GameBurrinhoService {
     private long checkHorizontalWins(List<List<String>> reels) {
         long multiplier = 0;
 
-        // Itera pelas 3 linhas (0, 1, 2)
         for (int row = 0; row < ROW_COUNT; row++) {
-            // Verifica todas as combinações de 3 símbolos consecutivos
             for (int startCol = 0; startCol <= REEL_COUNT - 3; startCol++) {
                 String firstSymbol = reels.get(startCol).get(row);
 
-                // Verifica se os próximos dois símbolos são iguais ao primeiro
                 if (reels.get(startCol + 1).get(row).equals(firstSymbol) &&
                         reels.get(startCol + 2).get(row).equals(firstSymbol)) {
                     multiplier = tablePunctuation(firstSymbol);
-                    break; // Não contar múltiplas vitórias na mesma linha
+                    break;
                 }
             }
         }
@@ -141,7 +129,6 @@ public class GameBurrinhoService {
         long multiplier = 0;
 
         for (int col = 0; col < REEL_COUNT; col++) {
-            // Verifica se todos os símbolos da coluna são iguais
             String firstSymbol = reels.get(col).get(0);
             if (reels.get(col).get(1).equals(firstSymbol) &&
                     reels.get(col).get(2).equals(firstSymbol)) {
@@ -161,7 +148,6 @@ public class GameBurrinhoService {
     private long checkDiagonalWins(List<List<String>> reels) {
         long multiplier = 0;
 
-        // Verificar diagonais principais (↘)
         for (int startCol = 0; startCol <= REEL_COUNT - 3; startCol++) {
             for (int row = 0; row <= ROW_COUNT - 3; row++) {
                 String firstSymbol = reels.get(startCol).get(row);
@@ -172,13 +158,11 @@ public class GameBurrinhoService {
             }
         }
 
-        // Verificar diagonais secundárias (↙)
         for (int startCol = 0; startCol <= REEL_COUNT - 3; startCol++) {
             for (int row = ROW_COUNT - 1; row >= 2; row--) {
                 String firstSymbol = reels.get(startCol).get(row);
                 if (reels.get(startCol + 1).get(row - 1).equals(firstSymbol) &&
                         reels.get(startCol + 2).get(row - 2).equals(firstSymbol)) {
-
                     multiplier = tablePunctuation(firstSymbol);
                 }
             }

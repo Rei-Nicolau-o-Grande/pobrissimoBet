@@ -17,8 +17,6 @@ import static bet.pobrissimo.enums.GameNames.RODA_RODA_PICANHA;
 @Service
 public class GameRodaRodaPicanhaService {
 
-    private static final String[] SYMBOLS = {"🥩", "🍳", "💩"};
-
     private static final int SIZE_WHEEL = 15;
 
     private final MersenneTwister random = new MersenneTwister();
