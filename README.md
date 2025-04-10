@@ -134,6 +134,6 @@ docker compose down -v
 Esse projeto é usado pelas seguintes empresas:
 
 - Front-end em React  
-https://github.com/Rei-Nicolau-o-Grande/React-Pobrissimo-Bet-Client/tree/flowbite-react
+https://github.com/Rei-Nicolau-o-Grande/React-Pobrissimo-Bet-Client/
 
 
