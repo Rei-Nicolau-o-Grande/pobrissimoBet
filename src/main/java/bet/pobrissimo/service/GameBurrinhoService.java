@@ -23,8 +23,8 @@ public class GameBurrinhoService {
     private static final Map<String, Integer> SYMBOL_MULTIPLIERS = Map.ofEntries(
             Map.entry("🫏", 10),
             Map.entry("🥩", 5),
-            Map.entry("❤️", 5),
-            Map.entry("🍒", 3),
+            Map.entry("❤️", 3),
+            Map.entry("🍒", 1),
             Map.entry("🍋", 1),
             Map.entry("🔔", 1),
             Map.entry("💎", 1),
