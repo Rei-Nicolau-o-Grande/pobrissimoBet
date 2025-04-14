@@ -11,7 +11,6 @@ RUN mkdir -p src/main/resources && \
 
 RUN mvn clean install -DskipTests
 
-# Segunda etapa: imagem leve
 FROM amazoncorretto:21-alpine
 WORKDIR /app
 
