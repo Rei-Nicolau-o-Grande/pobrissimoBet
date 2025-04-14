@@ -1,4 +1,7 @@
 FROM maven:3.9-amazoncorretto-21 as build
+
+RUN apt-get update && apt-get install -y openssl
+
 WORKDIR /app
 COPY . .
 
@@ -8,6 +11,7 @@ RUN mkdir -p src/main/resources && \
 
 RUN mvn clean install -DskipTests
 
+# Segunda etapa: imagem leve
 FROM amazoncorretto:21-alpine
 WORKDIR /app
 
