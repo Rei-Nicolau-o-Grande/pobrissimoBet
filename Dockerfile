@@ -1,5 +1,5 @@
 FROM amazoncorretto:21-alpine
-WORKDIR /app
-COPY target/ProbissimoBet.jar .
+COPY . .
+RUN ./mvn clean install -DskipTests
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","ProbissimoBet.jar"]
+ENTRYPOINT ["java","-jar","targer/ProbissimoBet.jar"]
