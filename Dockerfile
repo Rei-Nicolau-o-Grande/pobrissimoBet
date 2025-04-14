@@ -1,6 +1,6 @@
-FROM maven:3.9-amazoncorretto-21 as build
+FROM maven:3.9-amazoncorretto-21-alpine as build
 
-RUN apt-get update && apt-get install -y openssl
+RUN apk add --no-cache openssl
 
 WORKDIR /app
 COPY . .
