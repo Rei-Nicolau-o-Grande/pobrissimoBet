@@ -107,10 +107,6 @@ Mude o host do postgres
 ```bash
 DB_HOST=db # postgres
 ```
-Criando o .jar
-```bash
-mvn clean package -DskipTests
-```
 
 Rodando Docker Compose
 ```bash
