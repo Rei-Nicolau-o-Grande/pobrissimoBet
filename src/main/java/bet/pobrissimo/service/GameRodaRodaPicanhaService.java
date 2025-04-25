@@ -77,7 +77,7 @@ public class GameRodaRodaPicanhaService {
         for (int i = 0; i < wheel.size(); i++) {
             int INDEX_WIN = 7;
             if (wheel.get(INDEX_WIN).equals("🥩")) {
-                win += 10;
+                win += 5;
                 break;
             } else if (wheel.get(INDEX_WIN).equals("🍳")) {
                 win += 2;
