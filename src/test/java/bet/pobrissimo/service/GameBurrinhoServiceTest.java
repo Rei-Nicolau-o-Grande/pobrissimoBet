@@ -114,4 +114,23 @@ class GameBurrinhoServiceTest {
         assertTrue(testWin2 > 0);
     }
 
+    @Test
+    @DisplayName("Teste em um cenário onde há 2 combinações vencedoras verticais")
+    void testCheckWinVerticalTwoCombinations() {
+        // Arrange
+        List<List<String>> testReels = List.of(
+                List.of("🐒", "🫏", "🐒"),
+                List.of("🍒", "🍒", "🍒"),
+                List.of("🐒", "🍀", "🍒"),
+                List.of("💎", "🍀", "🫏"),
+                List.of("💎", "🍀", "🫏")
+        );
+
+        // Act
+        long testWin = gameBurrinhoService.checkWin(testReels);
+
+        // Assert
+        assertEquals(2, testWin);
+    }
+
 }

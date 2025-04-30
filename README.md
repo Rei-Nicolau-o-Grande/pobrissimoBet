@@ -1,5 +1,9 @@
 
 # Pobrissimo Bet
+
+##### Acesse:
+> https://pobrissimobet.onrender.com/
+
 Um Cassino Online de renda passiva. 1000% de retorno garantido. 💸💸💸
 
 ## Baixando o cassino e preprarando o ambiente

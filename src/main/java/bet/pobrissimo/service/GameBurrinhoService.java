@@ -110,7 +110,7 @@ public class GameBurrinhoService {
 
                 if (reels.get(startCol + 1).get(row).equals(firstSymbol) &&
                         reels.get(startCol + 2).get(row).equals(firstSymbol)) {
-                    multiplier = tablePunctuation(firstSymbol);
+                    multiplier += tablePunctuation(firstSymbol);
                     break;
                 }
             }
@@ -132,7 +132,7 @@ public class GameBurrinhoService {
             String firstSymbol = reels.get(col).get(0);
             if (reels.get(col).get(1).equals(firstSymbol) &&
                     reels.get(col).get(2).equals(firstSymbol)) {
-                multiplier = tablePunctuation(firstSymbol);
+                multiplier += tablePunctuation(firstSymbol);
             }
         }
 
@@ -153,7 +153,7 @@ public class GameBurrinhoService {
                 String firstSymbol = reels.get(startCol).get(row);
                 if (reels.get(startCol + 1).get(row + 1).equals(firstSymbol) &&
                         reels.get(startCol + 2).get(row + 2).equals(firstSymbol)) {
-                    multiplier = tablePunctuation(firstSymbol);
+                    multiplier += tablePunctuation(firstSymbol);
                 }
             }
         }
@@ -163,7 +163,7 @@ public class GameBurrinhoService {
                 String firstSymbol = reels.get(startCol).get(row);
                 if (reels.get(startCol + 1).get(row - 1).equals(firstSymbol) &&
                         reels.get(startCol + 2).get(row - 2).equals(firstSymbol)) {
-                    multiplier = tablePunctuation(firstSymbol);
+                    multiplier += tablePunctuation(firstSymbol);
                 }
             }
         }
