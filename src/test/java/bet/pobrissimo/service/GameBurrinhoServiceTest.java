@@ -133,4 +133,23 @@ class GameBurrinhoServiceTest {
         assertEquals(2, testWin);
     }
 
+    @Test
+    @DisplayName("Teste me um cenário onde o a linha vencedora é com 🫏-symbol e multiplicador é 10x")
+    void testCheckWinDumbSymbolMultiplier() {
+        // Arrange
+        List<List<String>> testReels = List.of(
+                List.of("🐒", "🫏", "🐒"),
+                List.of("🍒", "💎", "🍒"),
+                List.of("🐒", "🍀", "🫏"),
+                List.of("💎", "🐒", "🫏"),
+                List.of("💎", "🍀", "🫏")
+        );
+
+        // Act
+        long testWin = gameBurrinhoService.checkWin(testReels);
+
+        // Assert
+        assertEquals(10, testWin);
+    }
+
 }
