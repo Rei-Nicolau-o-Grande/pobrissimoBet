@@ -17,7 +17,7 @@ import java.util.Map;
 import static bet.pobrissimo.enums.GameNames.BURRINHO_FORTUNE;
 
 @Service
-public class GameBurrinhoService {
+public class GameBurrinhoFortuneService {
 
     // Símbolos do jogo e pontuação
     private static final Map<String, Integer> SYMBOL_MULTIPLIERS = Map.ofEntries(
@@ -50,9 +50,9 @@ public class GameBurrinhoService {
     private final TransactionService transactionService;
     private final TicketService ticketService;
 
-    public GameBurrinhoService(WalletService walletService,
-                           TransactionService transactionService,
-                           TicketService ticketService) {
+    public GameBurrinhoFortuneService(WalletService walletService,
+                                      TransactionService transactionService,
+                                      TicketService ticketService) {
         this.walletService = walletService;
         this.transactionService = transactionService;
         this.ticketService = ticketService;

@@ -11,7 +11,6 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificationExecutor<User> {
 
-//    @Query("SELECT u.email FROM User u WHERE u.email = :email")
     Optional<User> findByEmail(String email);
 
     Optional<User> findById(UUID userId);

@@ -7,7 +7,7 @@ import bet.pobrissimo.dtos.game.GameResultBurrinhoFortune;
 import bet.pobrissimo.dtos.game.GameResultRodaRodaPicanha;
 import bet.pobrissimo.dtos.game.RodaRodaPicanhaResponse;
 import bet.pobrissimo.dtos.transaction.TransactionRequestDto;
-import bet.pobrissimo.service.GameBurrinhoService;
+import bet.pobrissimo.service.GameBurrinhoFortuneService;
 import bet.pobrissimo.service.GameRodaRodaPicanhaService;
 import bet.pobrissimo.service.WalletService;
 import jakarta.validation.Valid;
@@ -25,11 +25,11 @@ import static bet.pobrissimo.enums.GameNames.*;
 @RequestMapping("api/v1/game")
 public class GameController {
 
-    private final GameBurrinhoService gameBurrinhoService;
+    private final GameBurrinhoFortuneService gameBurrinhoService;
     private final GameRodaRodaPicanhaService gameRoletaPicanhaService;
     private final WalletService walletService;
 
-    public GameController(GameBurrinhoService gameBurrinhoService,
+    public GameController(GameBurrinhoFortuneService gameBurrinhoService,
                           GameRodaRodaPicanhaService gameRoletaPicanhaService,
                           WalletService walletService) {
         this.gameBurrinhoService = gameBurrinhoService;

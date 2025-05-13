@@ -11,10 +11,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-class GameBurrinhoServiceTest {
+class GameBurrinhoFortuneServiceTest {
 
     @InjectMocks
-    private GameBurrinhoService gameBurrinhoService;
+    private GameBurrinhoFortuneService gameBurrinhoService;
 
     @Test
     @DisplayName("Teste de geração de símbolos")
