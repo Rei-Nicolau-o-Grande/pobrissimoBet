@@ -3,7 +3,6 @@ package bet.pobrissimo.model;
 import bet.pobrissimo.enums.GameNames;
 import bet.pobrissimo.enums.ResultBetEnum;
 import jakarta.persistence.*;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -28,6 +27,9 @@ public class Ticket {
     @Enumerated(EnumType.STRING)
     private ResultBetEnum resultBet;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transaction_id")
     private Transaction transactionId;
@@ -42,20 +44,26 @@ public class Ticket {
     public Ticket() {
     }
 
-    public Ticket(UUID id, GameNames nameGame, BigDecimal amount, Long multiplier, ResultBetEnum resultBet, Transaction transactionId) {
+    public Ticket(UUID id, GameNames nameGame, BigDecimal amount, Long multiplier, ResultBetEnum resultBet, User user, Transaction transactionId, LocalDateTime createdAt) {
         this.id = id;
         this.nameGame = nameGame;
         this.amount = amount;
         this.multiplier = multiplier;
         this.resultBet = resultBet;
+        this.user = user;
         this.transactionId = transactionId;
+        this.createdAt = createdAt;
     }
 
-    public Ticket(GameNames gameName, BigDecimal value, long multiplier, ResultBetEnum resultBet, UUID transactionId) {
-        this.nameGame = gameName;
-        this.amount = value;
+    public Ticket(GameNames nameGame, BigDecimal amount, Long multiplier, ResultBetEnum resultBet, UUID user, UUID transactionId) {
+        this.nameGame = nameGame;
+        this.amount = amount;
         this.multiplier = multiplier;
         this.resultBet = resultBet;
+
+        this.user = new User();
+        this.user.setId(user);
+
         this.transactionId = new Transaction();
         this.transactionId.setId(transactionId);
     }
@@ -100,6 +108,14 @@ public class Ticket {
         this.resultBet = resultBet;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public Transaction getTransactionId() {
         return transactionId;
     }
@@ -120,12 +136,12 @@ public class Ticket {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Ticket ticket = (Ticket) o;
-        return Objects.equals(id, ticket.id) && nameGame == ticket.nameGame && Objects.equals(amount, ticket.amount) && Objects.equals(multiplier, ticket.multiplier) && resultBet == ticket.resultBet && Objects.equals(transactionId, ticket.transactionId) && Objects.equals(createdAt, ticket.createdAt);
+        return Objects.equals(id, ticket.id) && nameGame == ticket.nameGame && Objects.equals(amount, ticket.amount) && Objects.equals(multiplier, ticket.multiplier) && resultBet == ticket.resultBet && Objects.equals(user, ticket.user) && Objects.equals(transactionId, ticket.transactionId) && Objects.equals(createdAt, ticket.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nameGame, amount, multiplier, resultBet, transactionId, createdAt);
+        return Objects.hash(id, nameGame, amount, multiplier, resultBet, user, transactionId, createdAt);
     }
 
     @Override
@@ -136,6 +152,7 @@ public class Ticket {
                 ", amount=" + amount +
                 ", multiplier=" + multiplier +
                 ", resultBet=" + resultBet +
+                ", user=" + user +
                 ", transactionId=" + transactionId +
                 ", createdAt=" + createdAt +
                 '}';

@@ -1,5 +1,6 @@
 package bet.pobrissimo.service;
 
+import bet.pobrissimo.config.AuthenticatedCurrentUser;
 import bet.pobrissimo.dtos.ticket.TicketResponse;
 import bet.pobrissimo.dtos.transaction.TransactionResponseDto;
 import bet.pobrissimo.enums.GameNames;
@@ -31,6 +32,7 @@ public class TicketService {
                 transactionResponse.value(),
                 multiplier,
                 multiplier > 0 ? WINNER : LOSER,
+                AuthenticatedCurrentUser.getUserId(),
                 transactionResponse.id()
         );
         ticketRepository.save(ticket);

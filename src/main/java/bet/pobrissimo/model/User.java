@@ -6,10 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(schema = "public", name = "users")
@@ -40,6 +37,9 @@ public class User {
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Wallet wallet;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Ticket> tickets = new ArrayList<>();
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_roles",
@@ -48,6 +48,14 @@ public class User {
             schema = "public"
     )
     private Set<Role> roles;
+
+    public User() {
+    }
+
+    public User(UUID id, String username, String email, String password, Instant createdAt, Instant updatedAt, Instant deactivatedAt, Boolean isActive, Wallet wallet, List<Ticket> tickets,Set<Role> roles) {
+        this(id, username, email, password, createdAt, updatedAt, deactivatedAt, isActive, wallet, roles);
+        this.tickets = tickets;
+    }
 
     public User(UUID id, String username, String email, String password, Instant createdAt, Instant updatedAt, Instant deactivatedAt, Boolean isActive, Wallet wallet, Set<Role> roles) {
         this.id = id;
@@ -60,9 +68,6 @@ public class User {
         this.isActive = isActive;
         this.wallet = wallet;
         this.roles = roles;
-    }
-
-    public User() {
     }
 
     public User(UserRequestDto dto, String encode, Role rolePlayer) {
@@ -154,6 +159,14 @@ public class User {
         this.wallet = wallet;
     }
 
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
+
     public Set<Role> getRoles() {
         return roles;
     }
@@ -164,15 +177,14 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt) && Objects.equals(deactivatedAt, user.deactivatedAt) && Objects.equals(isActive, user.isActive) && Objects.equals(wallet, user.wallet) && Objects.equals(roles, user.roles);
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt) && Objects.equals(deactivatedAt, user.deactivatedAt) && Objects.equals(isActive, user.isActive) && Objects.equals(wallet, user.wallet) && Objects.equals(tickets, user.tickets) && Objects.equals(roles, user.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, email, password, createdAt, updatedAt, deactivatedAt, isActive, wallet, roles);
+        return Objects.hash(id, username, email, password, createdAt, updatedAt, deactivatedAt, isActive, wallet, tickets, roles);
     }
 
     @Override
@@ -187,6 +199,7 @@ public class User {
                 ", deactivatedAt=" + deactivatedAt +
                 ", isActive=" + isActive +
                 ", wallet=" + wallet +
+                ", tickets=" + tickets +
                 ", roles=" + roles +
                 '}';
     }

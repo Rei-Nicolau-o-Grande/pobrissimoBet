@@ -89,7 +89,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User findById(String userId) {
-        var userIdUUID = ValidateConvertStringToUUID.validate(userId, "Usuário não encontrado.");
+        UUID userIdUUID = ValidateConvertStringToUUID.validate(userId, "Usuário não encontrado.");
 
         Optional<User> userOptional = this.userRepository.findById(userIdUUID);
 

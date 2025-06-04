@@ -1,0 +1,184 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="JasperTemplateTickets" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4620353b-5ccd-4a72-8b70-dbe742d73092">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<dataset name="TableTickets" uuid="f8be9834-0e9d-448f-9d02-a49b586acfb8">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<parameter name="DataTable" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+		<query language="sql"><![CDATA[]]></query>
+		<field name="amount" class="java.lang.Object"/>
+		<field name="createdAt" class="java.time.LocalDateTime"/>
+		<field name="resultBet" class="java.lang.Object"/>
+		<field name="nameGame" class="java.lang.Object"/>
+		<field name="multiplier" class="java.lang.Object"/>
+	</dataset>
+	<parameter name="logo" class="java.lang.Object"/>
+	<parameter name="Data_Table_Source" forPrompting="false" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="ContagemTickets" class="java.lang.Object"/>
+	<parameter name="TotalDinheiro" class="java.lang.Object"/>
+	<parameter name="GanhosDinheiro" class="java.lang.Object"/>
+	<parameter name="PerdasDinheiro" class="java.lang.Object"/>
+	<parameter name="ContagemTicketsGanhos" class="java.lang.Object"/>
+	<parameter name="ContagemTicketsPerdas" class="java.lang.Object"/>
+	<query language="sql"><![CDATA[]]></query>
+	<background splitType="Stretch"/>
+	<title height="79" splitType="Stretch">
+		<element kind="staticText" uuid="32736293-0f24-4972-915a-ebb812069d15" x="90" y="0" width="180" height="79" fontName="SansSerif" fontSize="16.0" bold="true" hTextAlign="Left" vTextAlign="Top">
+			<text><![CDATA[PobrissimoBet]]></text>
+		</element>
+		<element kind="image" uuid="00816924-4d43-4cd4-9770-ba99c632690d" x="0" y="0" width="80" height="79">
+			<expression><![CDATA[$P{logo}]]></expression>
+		</element>
+	</title>
+	<pageHeader height="34" splitType="Stretch">
+		<element kind="staticText" uuid="c69df9e4-6baa-4ee9-aaa2-85018ca4fa7d" x="0" y="0" width="555" height="34" fontName="SansSerif" fontSize="14.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Relatórios de Tickets]]></text>
+		</element>
+		<property name="com.jaspersoft.studio.unit.height" value="px"/>
+	</pageHeader>
+	<columnHeader height="95" splitType="Stretch">
+		<element kind="textField" uuid="70dcc65b-9989-45b2-a8b9-96db6169a217" x="0" y="60" width="260" height="30" fontSize="12.0" linkType="None" linkTarget="Self" bold="true" hTextAlign="Left" vTextAlign="Middle">
+			<expression><![CDATA["Total de Tickes: " + $P{ContagemTickets}]]></expression>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="textField" uuid="d43460bc-b890-4ed2-8d6b-420b146c777b" x="0" y="0" width="260" height="30" fontSize="12.0" linkType="None" linkTarget="Self" bold="true" hTextAlign="Left" vTextAlign="Middle">
+			<expression><![CDATA["Tickets Ganhos: " + $P{ContagemTicketsGanhos}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="textField" uuid="d1121f94-8301-4e28-b0a9-aaa7b9be2793" x="0" y="30" width="260" height="30" fontSize="12.0" linkType="None" linkTarget="Self" bold="true" hTextAlign="Left" vTextAlign="Middle">
+			<expression><![CDATA["Tickets Perdas: " + $P{ContagemTicketsPerdas}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="textField" uuid="8a5d99c7-f925-4dd3-80ca-aa653015885e" x="280" y="30" width="240" height="30" fontSize="12.0" linkType="None" linkTarget="Self" bold="true" hTextAlign="Right" vTextAlign="Middle">
+			<expression><![CDATA["Perdas: " + $P{PerdasDinheiro}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="textField" uuid="eaa86442-2a57-4761-9434-27f4899bd6b6" x="280" y="60" width="240" height="30" fontSize="12.0" linkType="None" linkTarget="Self" bold="true" hTextAlign="Right" vTextAlign="Middle">
+			<expression><![CDATA["Total: " + $P{TotalDinheiro}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="textField" uuid="14943601-8be2-47eb-acf1-c45fb1a9f0e1" x="280" y="0" width="240" height="30" fontSize="12.0" linkType="None" linkTarget="Self" bold="true" hTextAlign="Right" vTextAlign="Middle">
+			<expression><![CDATA["Ganhos: " + $P{GanhosDinheiro}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="340" splitType="Stretch">
+			<element kind="component" uuid="cd3adca6-fda2-4c53-a1c4-c784ad218dc3" x="0" y="0" width="555" height="340">
+				<component kind="table">
+					<datasetRun uuid="bc547f9b-142e-48de-a7f4-595b6bbc06e3" subDataset="TableTickets">
+						<dataSourceExpression><![CDATA[$P{Data_Table_Source}]]></dataSourceExpression>
+					</datasetRun>
+					<column kind="single" uuid="8ce66438-ff3d-4685-8336-0a805f0cb633" width="120">
+						<columnHeader height="30" rowSpan="1" style="Table_CH">
+							<element kind="staticText" uuid="89d30441-80c4-4664-b8d9-c4d690f5b56a" x="0" y="0" width="120" height="30" fontName="SansSerif" fontSize="14.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+								<text><![CDATA[Valor]]></text>
+							</element>
+						</columnHeader>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="215c9ba4-e55f-40e0-90d1-fdd80cd577d4" x="0" y="0" width="120" height="30" fontName="SansSerif" bold="false" hTextAlign="Center" vTextAlign="Middle">
+								<expression><![CDATA[$F{amount}]]></expression>
+							</element>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</detailCell>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+					</column>
+					<column kind="single" uuid="5dabeffc-7758-48e5-bbd5-969cb80e9b8b" width="100">
+						<columnHeader height="30" rowSpan="1" style="Table_CH">
+							<element kind="staticText" uuid="a01470db-f6c2-41a6-9dc3-572b8a764688" x="0" y="0" width="100" height="30" fontName="SansSerif" fontSize="14.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+								<text><![CDATA[Multiplicador]]></text>
+							</element>
+						</columnHeader>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="b60010df-d8bd-4b32-9344-21707ade3d7c" x="0" y="0" width="100" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+								<expression><![CDATA[$F{multiplier}]]></expression>
+							</element>
+						</detailCell>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+					</column>
+					<column kind="single" uuid="d5eed40e-6fab-461d-999a-ca649f2ffc42" width="120">
+						<columnHeader height="30" rowSpan="1" style="Table_CH">
+							<element kind="staticText" uuid="72ca48c4-e9ff-4cab-a837-b984b87deaa0" x="0" y="0" width="120" height="30" fontName="SansSerif" fontSize="14.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+								<text><![CDATA[Jogo]]></text>
+							</element>
+						</columnHeader>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="a1b47e3c-c5d0-4d35-88d2-b46b6ad9e0b7" key="" x="0" y="0" width="120" height="30" fontName="SansSerif" linkType="None" linkTarget="Self" hTextAlign="Center" vTextAlign="Middle">
+								<expression><![CDATA[$F{nameGame}]]></expression>
+							</element>
+						</detailCell>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+					</column>
+					<column kind="single" uuid="f6ecbc70-edd2-4560-b557-767d88696668" width="90">
+						<columnHeader height="30" rowSpan="1" style="Table_CH">
+							<element kind="staticText" uuid="ebab67fa-bb49-4b4c-b02d-eff7f34127cc" x="0" y="0" width="90" height="30" fontName="SansSerif" fontSize="14.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+								<text><![CDATA[Resultado]]></text>
+							</element>
+						</columnHeader>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="1fcfc473-e3a9-4a0d-b2cb-2770302567b5" x="0" y="0" width="90" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+								<expression><![CDATA[$F{resultBet}]]></expression>
+							</element>
+						</detailCell>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+					</column>
+					<column kind="single" uuid="26214f8b-adc9-449a-b281-ddc8cd7ed293" width="90">
+						<columnHeader height="30" rowSpan="1" style="Table_CH">
+							<element kind="staticText" uuid="50bd2551-b01e-45df-9075-f195509b4f43" x="0" y="0" width="90" height="30" fontName="SansSerif" fontSize="14.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+								<text><![CDATA[Data]]></text>
+							</element>
+						</columnHeader>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="14a3ad61-a7be-48ba-be77-07da222aa910" x="0" y="0" width="90" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+								<expression><![CDATA[$F{createdAt}.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))]]></expression>
+							</element>
+						</detailCell>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+					</column>
+				</component>
+				<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+				<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+				<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+				<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+		</band>
+	</detail>
+	<columnFooter height="45" splitType="Stretch"/>
+	<pageFooter height="60" splitType="Stretch">
+		<element kind="textField" uuid="44a9cbaa-2812-4919-8e75-2a6b4168ea3d" x="110" y="0" width="170" height="60" fontSize="14.0" bold="true" hTextAlign="Right" vTextAlign="Middle">
+			<expression><![CDATA["Página " + $V{PAGE_NUMBER}]]></expression>
+		</element>
+		<element kind="textField" uuid="ab8e1357-3074-41c0-83c2-38b194cf43de" x="280" y="0" width="170" height="60" fontSize="14.0" evaluationTime="Report" bold="true" hTextAlign="Left" vTextAlign="Middle">
+			<expression><![CDATA[" de " + $V{PAGE_NUMBER}]]></expression>
+		</element>
+	</pageFooter>
+	<summary height="42" splitType="Stretch"/>
+</jasperReport>
