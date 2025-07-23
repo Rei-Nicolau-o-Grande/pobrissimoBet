@@ -8,16 +8,20 @@ import bet.pobrissimo.repository.TicketRepository;
 import bet.pobrissimo.repository.specifications.TicketSpecifications;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 import org.springframework.util.StreamUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
@@ -28,6 +32,8 @@ import java.util.Map;
 
 @Service
 public class PdfService {
+
+    private final Logger logger = LoggerFactory.getLogger(PdfService.class);
 
     private final TicketRepository ticketRepository;
 
@@ -41,8 +47,11 @@ public class PdfService {
         Specification<Ticket> ticketsSpec = TicketSpecifications.searchTicket(searchTicket);
         List<Ticket> tickets = ticketRepository.findAll(ticketsSpec);
 
-        File jrxmlFile = ResourceUtils.getFile("classpath:templatesPDF/JasperTemplateTickets.jrxml");
-        JasperReport jasperReport = JasperCompileManager.compileReport(jrxmlFile.getAbsolutePath());
+//        File jrxmlFile = ResourceUtils.getFile("classpath:templatesPDF/JasperTemplateTickets.jrxml");
+        ClassPathResource resource = new ClassPathResource("templatesPDF/JasperTemplateTickets.jrxml");
+
+        InputStream jrxmlInputStream = resource.getInputStream();
+        JasperReport jasperReport = JasperCompileManager.compileReport(jrxmlInputStream);
 
         BufferedImage logo;
         try (InputStream imgInputStream = new ClassPathResource("templatesPDF/images/pobrissimo-bet-logo.png").getInputStream()) {
@@ -96,6 +105,7 @@ public class PdfService {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource());
             JasperExportManager.exportReportToPdfStream(jasperPrint, baos);
+            logger.info("PDF generado com sucesso.");
             return baos.toByteArray();
         }
     }

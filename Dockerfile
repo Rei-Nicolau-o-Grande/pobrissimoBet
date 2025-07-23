@@ -1,8 +1,9 @@
-FROM maven:3.9-amazoncorretto-21-alpine as build
+FROM maven:3.9.11-eclipse-temurin-21-alpine AS build
 
 RUN apk add --no-cache openssl
 
 WORKDIR /app
+
 COPY . .
 
 RUN mkdir -p src/main/resources && \
@@ -13,12 +14,12 @@ RUN cp src/main/resources/data.sql.example src/main/resources/data.sql
 
 RUN mvn clean install -DskipTests
 
-FROM amazoncorretto:21-alpine
+FROM eclipse-temurin:21-jdk-alpine
+
 WORKDIR /app
 
 COPY --from=build /app/target/ProbissimoBet.jar .
-COPY --from=build /app/src/main/resources/*.pem ./src/main/resources/
-COPY --from=build /app/src/main/resources/data.sql ./src/main/resources/data.sql
 
 EXPOSE 8080
+
 ENTRYPOINT ["java", "-jar", "ProbissimoBet.jar"]

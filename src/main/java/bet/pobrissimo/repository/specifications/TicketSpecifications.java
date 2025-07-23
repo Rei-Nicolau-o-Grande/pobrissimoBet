@@ -70,6 +70,8 @@ public class TicketSpecifications {
                 );
             }
 
+            query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
+
             return predicate;
         };
     }

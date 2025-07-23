@@ -30,15 +30,15 @@ services:
     depends_on:
       - db
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: 123
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
     ports:
       - "5050:5050"
     networks:
       - rede_probissimo_bet
 
   app:
-    image: probissimo_bet
+    image: probissimo_bet:eclipse-temurin-21-jdk-alpine
     build:
       context: .
     container_name: app_probissimo_bet
