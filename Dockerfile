@@ -1,4 +1,4 @@
-FROM maven:3.9.11-eclipse-temurin-21-alpine AS build
+FROM maven:3.9.11-amazoncorretto-21-alpine AS build
 
 RUN apk add --no-cache openssl
 
@@ -14,7 +14,9 @@ RUN cp src/main/resources/data.sql.example src/main/resources/data.sql
 
 RUN mvn clean install -DskipTests
 
-FROM eclipse-temurin:21-jdk-alpine
+FROM amazoncorretto:21-alpine
+
+RUN apk add --no-cache fontconfig ttf-dejavu
 
 WORKDIR /app
 
